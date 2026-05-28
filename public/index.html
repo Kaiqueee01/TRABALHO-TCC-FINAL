@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema De Monitoramentos De Receitas</title>
+  <link rel="stylesheet" href="css/style.css" />
+
+</head>
+<body>
+
+<header>
+  <div>
+    💊 Sistema IMR
+    <div class="subheader">Sistema De Monitoramento De Receitas</div>
+  </div>
+  <div id="usuarioLogadoInfo"></div>
+</header>
+
+<!-- TELA INICIAL -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box" id="inicioAcesso">
+    <h2>Bem-vindo ao Sistema</h2>
+    <p>Selecione o tipo de acesso:</p>
+    <button class="btn-cliente" onclick="abrirLoginCliente()">👤 Área do Cliente</button>
+    <button class="btn-adm" onclick="abrirLoginAdm()">🛡️ Área do Administrador</button>
+  </div>
+
+  <!-- Login Cliente -->
+  <div class="login-box hidden" id="loginClienteBox">
+    <h2>Login do Cliente</h2>
+    <input type="text" id="loginCpfCliente" placeholder="Digite seu CPF">
+    <input type="password" id="loginSenhaCliente" placeholder="Digite sua senha">
+    <button class="btn-cliente" onclick="loginCliente()">Entrar como Cliente</button>
+    <button class="btn-voltar" onclick="voltarTelaInicial()">Voltar</button>
+    <div id="msgLoginCliente"></div>
+    <button class="btn-voltar" onclick="abrirCadastroCliente()" style="margin-top:14px;">Cadastrar-se</button>
+  </div>
+
+  <!-- Cadastro Cliente -->
+  <div class="login-box hidden" id="cadastroClienteBox">
+    <h2>Cadastro do Cliente</h2>
+    <div class="grid-2">
+      <div>
+        <label>Nome</label>
+        <input type="text" id="cadNome" placeholder="Digite seu nome">
+      </div>
+      <div>
+        <label>CPF</label>
+        <input type="text" id="cadCpf" placeholder="Digite seu CPF">
+      </div>
+      <div>
+        <label>Telefone</label>
+        <input type="text" id="cadTelefone" placeholder="Digite seu telefone">
+      </div>
+      <div>
+        <label>Nascimento</label>
+        <input type="date" id="cadNascimento">
+      </div>
+    </div>
+
+    <label>Endereço</label>
+    <input type="text" id="cadEndereco" placeholder="Digite seu endereço">
+
+    <label>Senha</label>
+    <input type="password" id="cadSenha" placeholder="Crie uma senha">
+
+    <div class="upload-group">
+      <label>Upload de Documento</label>
+      <div class="upload-guide">Selecione PDF, JPG ou PNG. O documento será salvo com o cliente.</div>
+      <label class="file-upload-button" for="cadDocumento" id="buttonDocumentoCliente" data-default-text="Selecionar documento">Selecionar documento</label>
+      <input type="file" id="cadDocumento" accept=".pdf,.jpg,.jpeg,.png" data-button-id="buttonDocumentoCliente" onchange="previewUpload('cadDocumento','previewDocumentoCliente')" />
+      <div id="previewDocumentoCliente" class="file-preview"></div>
+    </div>
+
+    <button class="btn-cliente" onclick="cadastrarCliente()">Cadastrar</button>
+    <button class="btn-voltar" onclick="voltarTelaInicial()">Voltar</button>
+    <div id="msgCadastroCliente"></div>
+  </div>
+
+  <!-- Login ADM -->
+  <div class="login-box hidden" id="loginAdmBox">
+    <h2>Login do Administrador</h2>
+    <input type="text" id="usuarioAdm" placeholder="Usuário">
+    <input type="password" id="senhaAdm" placeholder="Senha">
+    <button class="btn-adm" onclick="loginAdm()">Entrar como Administrador</button>
+    <button class="btn-voltar" onclick="voltarTelaInicial()">Voltar</button>
+    <div id="msgLoginAdm"></div>
+  </div>
+</div>
+
+<!-- SISTEMA -->
+<div class="container" id="sistema">
+  <div class="sidebar" id="menu"></div>
+  <div class="content" id="conteudo"></div>
+</div>
+
+<script src="js/main.js" defer></script>
+
+
+</body>
+</html>
