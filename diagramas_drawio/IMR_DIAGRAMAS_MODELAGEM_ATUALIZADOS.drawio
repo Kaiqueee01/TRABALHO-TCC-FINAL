@@ -1,0 +1,429 @@
+<mxfile host="app.diagrams.net" modified="2026-05-29T00:00:00.000Z" agent="Codex" version="24.7.17" type="device">
+  <diagram id="imr-caso-uso" name="01 - Caso de Uso">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="uc-title" value="Sistema IMR - Diagrama de Caso de Uso" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="250" y="25" width="670" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-boundary" value="Sistema de Monitoramento de Receitas IMR" style="rounded=1;whiteSpace=wrap;html=1;arcSize=6;strokeWidth=2;dashed=1;fillColor=#FFFFFF;strokeColor=#64748B;fontStyle=1;verticalAlign=top;spacingTop=12;fontSize=15;fontColor=#334155;" vertex="1" parent="1">
+          <mxGeometry x="250" y="85" width="680" height="640" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-admin" value="Administrador" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=14;fontStyle=1;fontColor=#111827;strokeColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="70" y="245" width="80" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-client" value="Cliente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=14;fontStyle=1;fontColor=#111827;strokeColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="275" width="80" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-twilio" value="Servico SMS Twilio" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=14;fontStyle=1;fontColor=#111827;strokeColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="560" width="95" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-login" value="Realizar login" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#0284C7;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="520" y="120" width="155" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-dashboard" value="Consultar dashboard" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="520" y="205" width="155" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-self-register" value="Cadastrar-se" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#0284C7;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="720" y="150" width="160" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-own-data" value="Atualizar meus dados" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="720" y="250" width="160" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-own-recipes" value="Cadastrar e consultar minhas receitas" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="695" y="355" width="210" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-client-alerts" value="Visualizar notificacoes" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FCE7F3;strokeColor=#DB2777;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="720" y="485" width="160" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-manage-client" value="Gerenciar clientes" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="305" y="180" width="165" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-manage-recipe" value="Gerenciar receitas" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="305" y="290" width="165" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-admin-alerts" value="Acompanhar notificacoes gerais" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FCE7F3;strokeColor=#DB2777;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="295" y="405" width="185" height="66" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-send-sms" value="Enviar SMS ao cliente" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FCE7F3;strokeColor=#DB2777;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="305" y="535" width="165" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-upload-doc" value="Anexar documento do cliente" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#0284C7;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="505" y="610" width="180" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-upload-recipe" value="Anexar arquivo da receita" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#0284C7;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="715" y="610" width="170" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e1" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-admin" target="uc-login">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e2" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-client" target="uc-login">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e3" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-admin" target="uc-dashboard">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e4" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-client" target="uc-dashboard">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e5" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-admin" target="uc-manage-client">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e6" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-admin" target="uc-manage-recipe">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e7" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-admin" target="uc-admin-alerts">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e8" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-admin" target="uc-send-sms">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e9" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-client" target="uc-self-register">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e10" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-client" target="uc-own-data">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e11" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-client" target="uc-own-recipes">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e12" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#475569;" edge="1" parent="1" source="uc-client" target="uc-client-alerts">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e13" value="inclui" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#64748B;fontColor=#475569;" edge="1" parent="1" source="uc-self-register" target="uc-upload-doc">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e14" value="inclui" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#64748B;fontColor=#475569;" edge="1" parent="1" source="uc-manage-client" target="uc-upload-doc">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e15" value="inclui" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#64748B;fontColor=#475569;" edge="1" parent="1" source="uc-own-recipes" target="uc-upload-recipe">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e16" value="inclui" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#64748B;fontColor=#475569;" edge="1" parent="1" source="uc-manage-recipe" target="uc-upload-recipe">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-e17" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#7C3AED;strokeWidth=2;" edge="1" parent="1" source="uc-send-sms" target="uc-twilio">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="imr-sequencia" name="02 - Sequencia">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="seq-title" value="Sistema IMR - Diagrama de Sequencia: Cadastro e Monitoramento de Receita" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="135" y="25" width="900" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-actor" value="Cliente / Administrador" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=13;fontStyle=1;fontColor=#111827;strokeColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="70" y="95" width="75" height="115" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-front" value="Frontend Web\nHTML/CSS/JS" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#E0F2FE;strokeColor=#0284C7;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="220" y="95" width="130" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-api" value="API Node.js\nExpress" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="430" y="95" width="130" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-upload" value="Middleware\nMulter Upload" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="620" y="95" width="140" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-db" value="Banco MySQL\nreceitacerta" style="shape=cylinder3d;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="820" y="90" width="140" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-notif" value="Dashboard e\nNotificacoes" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FCE7F3;strokeColor=#DB2777;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="95" width="130" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-l1" value="" style="line;strokeWidth=1;html=1;strokeColor=#94A3B8;" vertex="1" parent="1">
+          <mxGeometry x="107" y="220" width="10" height="540" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-l2" value="" style="line;strokeWidth=1;html=1;strokeColor=#94A3B8;" vertex="1" parent="1">
+          <mxGeometry x="285" y="175" width="10" height="585" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-l3" value="" style="line;strokeWidth=1;html=1;strokeColor=#94A3B8;" vertex="1" parent="1">
+          <mxGeometry x="495" y="175" width="10" height="585" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-l4" value="" style="line;strokeWidth=1;html=1;strokeColor=#94A3B8;" vertex="1" parent="1">
+          <mxGeometry x="690" y="175" width="10" height="585" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-l5" value="" style="line;strokeWidth=1;html=1;strokeColor=#94A3B8;" vertex="1" parent="1">
+          <mxGeometry x="890" y="175" width="10" height="585" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-l6" value="" style="line;strokeWidth=1;html=1;strokeColor=#94A3B8;" vertex="1" parent="1">
+          <mxGeometry x="1075" y="175" width="10" height="585" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e1" value="1. Preenche dados da receita" style="endArrow=block;html=1;rounded=0;strokeColor=#0284C7;fontColor=#075985;" edge="1" parent="1" source="seq-actor" target="seq-front">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e2" value="2. POST /api/receitas multipart" style="endArrow=block;html=1;rounded=0;strokeColor=#16A34A;fontColor=#166534;" edge="1" parent="1" source="seq-front" target="seq-api">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e3" value="3. Valida tipo/tamanho do arquivo" style="endArrow=block;html=1;rounded=0;strokeColor=#D97706;fontColor=#92400E;" edge="1" parent="1" source="seq-api" target="seq-upload">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e4" value="4. Retorna nome do arquivo salvo" style="endArrow=block;dashed=1;html=1;rounded=0;strokeColor=#D97706;fontColor=#92400E;" edge="1" parent="1" source="seq-upload" target="seq-api">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e5" value="5. INSERT receitas" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;fontColor=#334155;" edge="1" parent="1" source="seq-api" target="seq-db">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e6" value="6. Retorna id da receita" style="endArrow=block;dashed=1;html=1;rounded=0;strokeColor=#475569;fontColor=#334155;" edge="1" parent="1" source="seq-db" target="seq-api">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e7" value="7. Resposta success=true" style="endArrow=block;dashed=1;html=1;rounded=0;strokeColor=#16A34A;fontColor=#166534;" edge="1" parent="1" source="seq-api" target="seq-front">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e8" value="8. GET /api/receitas" style="endArrow=block;html=1;rounded=0;strokeColor=#16A34A;fontColor=#166534;" edge="1" parent="1" source="seq-front" target="seq-api">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e9" value="9. SELECT receitas + clientes" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;fontColor=#334155;" edge="1" parent="1" source="seq-api" target="seq-db">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e10" value="10. Lista de receitas" style="endArrow=block;dashed=1;html=1;rounded=0;strokeColor=#475569;fontColor=#334155;" edge="1" parent="1" source="seq-db" target="seq-api">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e11" value="11. JSON atualizado" style="endArrow=block;dashed=1;html=1;rounded=0;strokeColor=#16A34A;fontColor=#166534;" edge="1" parent="1" source="seq-api" target="seq-front">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e12" value="12. Calcula dias restantes e monta alertas" style="endArrow=block;html=1;rounded=0;strokeColor=#DB2777;fontColor=#9D174D;" edge="1" parent="1" source="seq-front" target="seq-notif">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="seq-e13" value="13. Exibe dashboard/notificacoes" style="endArrow=block;dashed=1;html=1;rounded=0;strokeColor=#DB2777;fontColor=#9D174D;" edge="1" parent="1" source="seq-notif" target="seq-actor">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="imr-atividades" name="03 - Atividades">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1510" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="act-title" value="Sistema IMR - Diagrama de Atividades" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="245" y="25" width="680" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-start" value="Inicio" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=14;fontStyle=1;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="515" y="90" width="140" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-login" value="Usuario realiza login" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#E0F2FE;strokeColor=#0284C7;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="475" y="175" width="220" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-profile" value="Perfil de acesso?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="505" y="270" width="160" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-admin" value="Area administrativa\nGerencia clientes, receitas e SMS" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="250" y="405" width="240" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-client" value="Area do cliente\nConsulta dados e receitas proprias" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="680" y="405" width="240" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-recipe" value="Cadastrar ou atualizar receita" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FCE7F3;strokeColor=#DB2777;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="475" y="525" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-validate" value="Validar campos obrigatorios e arquivo" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#F8FAFC;strokeColor=#64748B;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="475" y="625" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-save" value="Salvar receita no MySQL\ne arquivo em uploads" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="475" y="725" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-calc" value="Calcular validade e proxima retirada" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#E0F2FE;strokeColor=#0284C7;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="475" y="825" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-vencida" value="Receita vencida?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="225" y="935" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-proxima" value="Vence em ate 5 dias?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="510" y="935" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-retirada" value="Retirada hoje ou em ate 3 dias?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="785" y="935" width="170" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-alert1" value="Exibir alerta de vencida" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FCE7F3;strokeColor=#DB2777;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="180" y="1055" width="185" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-alert2" value="Exibir alerta de vencimento" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="495" y="1055" width="180" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-alert3" value="Exibir lembrete de retirada" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="770" y="1055" width="200" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-dashboard" value="Atualizar dashboard e notificacoes" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#F8FAFC;strokeColor=#64748B;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="475" y="1165" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-sms-question" value="Administrador deseja enviar SMS?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1265" width="170" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-sms" value="Enviar SMS e registrar historico" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FCE7F3;strokeColor=#DB2777;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="755" y="1280" width="210" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-end" value="Fim" style="ellipse;whiteSpace=wrap;html=1;fillColor=#F1F5F9;strokeColor=#64748B;fontSize=14;fontStyle=1;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="515" y="1400" width="140" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e1" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-start" target="act-login">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e2" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-login" target="act-profile">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e3" value="Administrador" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-profile" target="act-admin">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e4" value="Cliente" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-profile" target="act-client">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e5" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-admin" target="act-recipe">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e6" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-client" target="act-recipe">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e7" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-recipe" target="act-validate">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e8" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-validate" target="act-save">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e9" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-save" target="act-calc">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e10" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#DB2777;strokeWidth=2;" edge="1" parent="1" source="act-calc" target="act-vencida">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e11" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#D97706;strokeWidth=2;" edge="1" parent="1" source="act-calc" target="act-proxima">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e12" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="1" source="act-calc" target="act-retirada">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e13" value="sim" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-vencida" target="act-alert1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e14" value="sim" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-proxima" target="act-alert2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e15" value="sim" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-retirada" target="act-alert3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e16" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-alert1" target="act-dashboard">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e17" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-alert2" target="act-dashboard">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e18" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-alert3" target="act-dashboard">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e19" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-dashboard" target="act-sms-question">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e20" value="sim" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-sms-question" target="act-sms">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e21" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-sms" target="act-end">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-e22" value="nao" style="endArrow=block;html=1;rounded=0;strokeColor=#475569;strokeWidth=2;" edge="1" parent="1" source="act-sms-question" target="act-end">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="imr-classes" name="04 - Classes Conceituais">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1000" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="class-title" value="Sistema IMR - Diagrama de Classes Conceituais" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="210" y="25" width="750" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-admin" value="Administrador\n--------------------\nusuario\nsenha\n--------------------\nloginAdm()\ngerenciarClientes()\ngerenciarReceitas()\nenviarSms()" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="70" y="125" width="230" height="215" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-client" value="Cliente\n--------------------\nid\nnome\ncpf\ntelefone\nendereco\nnascimento\nsenhaHash\ndocumento\n--------------------\nloginCliente()\natualizarDados()\nconsultarReceitas()" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#E0F2FE;strokeColor=#0284C7;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="105" width="250" height="300" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-recipe" value="Receita\n--------------------\nid\nmedicamento\ndataReceita\nvalidade\nproximaRetirada\nobservacoes\nimagemReceita\nstatus\n--------------------\ncalcularDiasRestantes()\nverificarVencimento()" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="805" y="115" width="260" height="280" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-doc" value="Documento\n--------------------\nnomeArquivo\ntipoArquivo\ntamanho\ncaminho\n--------------------\nvalidarFormato()\nsalvarArquivo()" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#FCE7F3;strokeColor=#DB2777;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="470" width="230" height="220" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-notif" value="Notificacao\n--------------------\nid\nmensagem\ntipo\nlida\ncreatedAt\n--------------------\nexibir()\nmarcarComoLida()" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#EDE9FE;strokeColor=#7C3AED;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="495" width="250" height="210" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-sms" value="SmsEnvio\n--------------------\nid\ntelefone\nmensagem\nprovider\nstatus\nerro\ncreatedAt\n--------------------\nenviar()\nregistrarHistorico()" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#EDE9FE;strokeColor=#7C3AED;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="805" y="485" width="260" height="230" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-pharmacy" value="Farmacia\n--------------------\nid\nnome\nendereco\ntelefone\n--------------------\ncadastrarFarmacia()" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="435" y="735" width="240" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-e1" value="gerencia" style="endArrow=block;html=1;rounded=0;strokeColor=#D97706;fontColor=#92400E;strokeWidth=2;" edge="1" parent="1" source="class-admin" target="class-client">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-e2" value="gerencia" style="endArrow=block;html=1;rounded=0;strokeColor=#D97706;fontColor=#92400E;strokeWidth=2;" edge="1" parent="1" source="class-admin" target="class-recipe">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-e3" value="1 possui 0..N" style="endArrow=block;html=1;rounded=0;strokeColor=#16A34A;fontColor=#166534;strokeWidth=2;" edge="1" parent="1" source="class-client" target="class-recipe">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-e4" value="0..1 documento" style="endArrow=block;html=1;rounded=0;strokeColor=#DB2777;fontColor=#9D174D;strokeWidth=2;" edge="1" parent="1" source="class-client" target="class-doc">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-e5" value="0..1 arquivo" style="endArrow=block;html=1;rounded=0;strokeColor=#DB2777;fontColor=#9D174D;strokeWidth=2;" edge="1" parent="1" source="class-recipe" target="class-doc">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-e6" value="0..N recebe" style="endArrow=block;html=1;rounded=0;strokeColor=#7C3AED;fontColor=#5B21B6;strokeWidth=2;" edge="1" parent="1" source="class-client" target="class-notif">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-e7" value="0..N historico" style="endArrow=block;html=1;rounded=0;strokeColor=#7C3AED;fontColor=#5B21B6;strokeWidth=2;" edge="1" parent="1" source="class-client" target="class-sms">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-e8" value="envia" style="endArrow=block;html=1;rounded=0;strokeColor=#7C3AED;fontColor=#5B21B6;strokeWidth=2;" edge="1" parent="1" source="class-admin" target="class-sms">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="class-e9" value="previsto para expansao" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#64748B;fontColor=#475569;" edge="1" parent="1" source="class-pharmacy" target="class-recipe">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="imr-er" name="05 - Entidade Relacionamento">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="er-title" value="Sistema IMR - Diagrama Entidade-Relacionamento" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="230" y="25" width="710" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="er-clientes" value="clientes\n--------------------\nPK id INT\nnome VARCHAR(150)\ncpf VARCHAR(14) UNIQUE\ntelefone VARCHAR(20)\nendereco VARCHAR(255)\nnascimento DATE\nsenha VARCHAR(255)\ndocumento VARCHAR(255)\ncreated_at TIMESTAMP\nupdated_at TIMESTAMP" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#E0F2FE;strokeColor=#0284C7;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="70" y="115" width="255" height="280" as="geometry"/>
+        </mxCell>
+        <mxCell id="er-receitas" value="receitas\n--------------------\nPK id INT\nFK cliente_id INT\nmedicamento VARCHAR(150)\ndata_receita DATE\nvalidade DATE\nproxima_retirada DATE\nobservacoes TEXT\nimagem_receita VARCHAR(255)\nstatus ENUM\ncreated_at TIMESTAMP\nupdated_at TIMESTAMP" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="455" y="100" width="270" height="310" as="geometry"/>
+        </mxCell>
+        <mxCell id="er-notif" value="notificacoes\n--------------------\nPK id INT\nFK cliente_id INT NULL\nmensagem TEXT\ntipo VARCHAR(50)\nlida TINYINT(1)\ncreated_at TIMESTAMP" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#FCE7F3;strokeColor=#DB2777;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="850" y="115" width="250" height="210" as="geometry"/>
+        </mxCell>
+        <mxCell id="er-sms" value="sms_envios\n--------------------\nPK id INT\nFK cliente_id INT NULL\ntelefone VARCHAR(20)\nmensagem TEXT\nprovider VARCHAR(50)\nprovider_sid VARCHAR(120)\nstatus VARCHAR(40)\nerro TEXT\ncreated_at TIMESTAMP" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#EDE9FE;strokeColor=#7C3AED;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="850" y="425" width="250" height="270" as="geometry"/>
+        </mxCell>
+        <mxCell id="er-farmacia" value="farmacias\n--------------------\nPK id INT\nnome VARCHAR(150)\nendereco VARCHAR(255)\ntelefone VARCHAR(20)\ncreated_at TIMESTAMP" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=12;fontColor=#0F172A;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="70" y="520" width="255" height="175" as="geometry"/>
+        </mxCell>
+        <mxCell id="er-note" value="Observacao\n--------------------\nA tabela farmacias existe no schema atual, mas ainda nao possui chave estrangeira ligada a receitas ou clientes." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#F8FAFC;strokeColor=#94A3B8;fontSize=12;fontColor=#475569;align=left;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="440" y="540" width="300" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="er-e1" value="1:N\nON DELETE CASCADE" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;endArrow=ERmany;strokeWidth=2;strokeColor=#475569;fontSize=12;fontColor=#334155;" edge="1" parent="1" source="er-clientes" target="er-receitas">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="er-e2" value="1:N\nON DELETE CASCADE" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;endArrow=ERmany;strokeWidth=2;strokeColor=#475569;fontSize=12;fontColor=#334155;" edge="1" parent="1" source="er-clientes" target="er-notif">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="er-e3" value="1:N\nON DELETE SET NULL" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERone;endArrow=ERmany;strokeWidth=2;strokeColor=#475569;fontSize=12;fontColor=#334155;" edge="1" parent="1" source="er-clientes" target="er-sms">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
