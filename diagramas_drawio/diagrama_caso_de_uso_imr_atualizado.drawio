@@ -1,0 +1,91 @@
+<mxfile host="app.diagrams.net" modified="2026-05-31T00:00:00.000Z" agent="Codex" version="24.7.17" type="device">
+  <diagram id="caso-uso-imr-atualizado" name="Caso de Uso IMR Atualizado">
+    <mxGraphModel dx="1600" dy="980" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="980" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="Diagrama de Caso de Uso - Sistema IMR" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=30;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="430" y="20" width="740" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="Sistema de Monitoramento de Receitas Medicas" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontColor=#475569;" vertex="1" parent="1">
+          <mxGeometry x="515" y="58" width="570" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="system" value="Sistema IMR" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1f2937;strokeWidth=2;verticalAlign=top;fontSize=18;fontColor=#475569;spacingTop=14;" vertex="1" parent="1">
+          <mxGeometry x="290" y="105" width="990" height="805" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor_cliente" value="Cliente&lt;br&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Paciente&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=20;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="78" y="275" width="104" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor_admin" value="Administrador" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=20;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="1418" y="270" width="104" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor_sms" value="Servico SMS&lt;br&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Twilio&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=20;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="1418" y="655" width="104" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_cadastrar" value="Cadastrar-se" style="ellipse;whiteSpace=wrap;html=1;fillColor=#eef6ff;strokeColor=#2563eb;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="388" y="133" width="224" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_login" value="Realizar login" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f97316;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="388" y="243" width="224" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_recuperar" value="Recuperar&lt;br&gt;senha" style="ellipse;whiteSpace=wrap;html=1;fillColor=#eef6ff;strokeColor=#2563eb;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="388" y="353" width="224" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_atualizar" value="Atualizar dados&lt;br&gt;pessoais" style="ellipse;whiteSpace=wrap;html=1;fillColor=#eef6ff;strokeColor=#2563eb;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="388" y="463" width="224" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_notificacoes_cliente" value="Consultar&lt;br&gt;notificacoes" style="ellipse;whiteSpace=wrap;html=1;fillColor=#eef6ff;strokeColor=#2563eb;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="388" y="583" width="224" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_anexar" value="Anexar arquivo&lt;br&gt;da receita" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f97316;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="638" y="88" width="244" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_cadastrar_receita" value="Cadastrar receita&lt;br&gt;medica" style="ellipse;whiteSpace=wrap;html=1;fillColor=#eef6ff;strokeColor=#2563eb;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="628" y="188" width="264" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_editar_receita" value="Editar receita&lt;br&gt;medica" style="ellipse;whiteSpace=wrap;html=1;fillColor=#eef6ff;strokeColor=#2563eb;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="628" y="303" width="264" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_consultar_receitas" value="Consultar minhas&lt;br&gt;receitas" style="ellipse;whiteSpace=wrap;html=1;fillColor=#eef6ff;strokeColor=#2563eb;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="628" y="418" width="264" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_painel" value="Acessar painel&lt;br&gt;administrativo" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#16a34a;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="918" y="133" width="224" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_clientes" value="Gerenciar&lt;br&gt;clientes" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#16a34a;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="918" y="243" width="224" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_receitas_admin" value="Gerenciar&lt;br&gt;receitas" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#16a34a;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="918" y="358" width="224" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_avisos_admin" value="Consultar avisos&lt;br&gt;gerais" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#16a34a;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="918" y="473" width="224" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_enviar_sms" value="Enviar SMS&lt;br&gt;ao cliente" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#16a34a;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="918" y="588" width="224" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_historico_sms" value="Consultar historico&lt;br&gt;de SMS" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#16a34a;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="918" y="703" width="224" height="84" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_cliente_cadastrar" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_cliente" target="uc_cadastrar"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_cliente_login" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_cliente" target="uc_login"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_cliente_recuperar" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_cliente" target="uc_recuperar"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_cliente_atualizar" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_cliente" target="uc_atualizar"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_cliente_notificacoes" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_cliente" target="uc_notificacoes_cliente"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_cliente_cadastrar_receita" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_cliente" target="uc_cadastrar_receita"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_cliente_editar_receita" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_cliente" target="uc_editar_receita"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_cliente_consultar_receitas" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_cliente" target="uc_consultar_receitas"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_admin_painel" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_admin" target="uc_painel"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_admin_clientes" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_admin" target="uc_clientes"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_admin_receitas" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_admin" target="uc_receitas_admin"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_admin_avisos" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_admin" target="uc_avisos_admin"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_admin_sms" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_admin" target="uc_enviar_sms"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_admin_historico" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_admin" target="uc_historico_sms"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_admin_login" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_admin" target="uc_login"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_sms_enviar" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="actor_sms" target="uc_enviar_sms"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="inc_cadastrar_anexar" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;html=1;rounded=0;dashed=1;strokeColor=#64748b;strokeWidth=2;fontColor=#475569;fontSize=14;fontStyle=1;" edge="1" parent="1" source="uc_cadastrar_receita" target="uc_anexar"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="inc_editar_anexar" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;html=1;rounded=0;dashed=1;strokeColor=#64748b;strokeWidth=2;fontColor=#475569;fontSize=14;fontStyle=1;" edge="1" parent="1" source="uc_editar_receita" target="uc_anexar"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
