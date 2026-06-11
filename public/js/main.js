@@ -1,3 +1,4 @@
+  // Define onde o frontend vai chamar a API.
   const frontendSeparado = window.location.protocol === 'file:' || ['5500', '5501'].includes(window.location.port);
   const API_ORIGIN = frontendSeparado ? 'http://localhost:3000' : window.location.origin;
   const API = `${API_ORIGIN}/api`;
@@ -13,11 +14,13 @@
   let receitas = JSON.parse(localStorage.getItem('receitas')) || [];
   const NOTIFICACOES_ADM_OCULTAS_KEY = 'notificacoesAdmOcultas';
 
+  // Salva clientes e receitas no navegador.
   function salvarDados() {
     localStorage.setItem('clientes', JSON.stringify(clientes));
     localStorage.setItem('receitas', JSON.stringify(receitas));
   }
 
+  // Evita que texto vire HTML perigoso na tela.
   function escapeHtml(valor) {
     return String(valor ?? '').replace(/[&<>"']/g, (char) => ({
       '&': '&amp;',
@@ -28,11 +31,13 @@
     }[char]));
   }
 
+  // Mantem somente a parte da data.
   function dataCurta(valor) {
     if (!valor) return '';
     return String(valor).slice(0, 10);
   }
 
+  // Monta um link seguro para arquivos enviados.
   function arquivoSeguro(arquivo, pasta = '') {
     if (typeof arquivo === 'string' && arquivo) {
       return {
@@ -52,6 +57,7 @@
     };
   }
 
+  // Ajusta o cliente que vem do backend para a tela.
   function clienteApiParaTela(cliente) {
     return {
       id: Number(cliente.id),
@@ -64,6 +70,7 @@
     };
   }
 
+  // Ajusta a receita que vem do backend para a tela.
   function receitaApiParaTela(receita) {
     return {
       id: Number(receita.id),
@@ -77,6 +84,7 @@
     };
   }
 
+  // Faz chamada para a API e trata erro de resposta.
   async function apiJson(caminho, opcoes = {}) {
     const resposta = await fetch(`${API}${caminho}`, opcoes);
     const dados = await resposta.json().catch(() => ({}));
@@ -88,6 +96,7 @@
     return dados;
   }
 
+  // Busca clientes e receitas atualizados no backend.
   async function sincronizarDadosBackend() {
     const [dadosClientes, dadosReceitas] = await Promise.all([
       apiJson('/clientes'),
@@ -99,22 +108,7 @@
     salvarDados();
   }
 
-  async function lerArquivoBase64(inputId) {
-    const input = document.getElementById(inputId);
-    if (!input || !input.files || input.files.length === 0) return null;
-    const file = input.files[0];
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve({
-        nome: file.name,
-        tipo: file.type,
-        dados: reader.result
-      });
-      reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
-      reader.readAsDataURL(file);
-    });
-  }
-
+  // Mostra o nome do arquivo selecionado.
   function previewUpload(inputId, previewId) {
     const input = document.getElementById(inputId);
     const preview = document.getElementById(previewId);
@@ -130,6 +124,7 @@
     }
   }
 
+  // Cadastra o cliente e envia o documento.
   async function cadastrarCliente() {
     const nome = document.getElementById('cadNome').value.trim();
     const cpf = document.getElementById('cadCpf').value.trim();
@@ -194,52 +189,23 @@
       if (msgBox) msgBox.innerHTML = mensagemErro(e.message || 'Erro ao cadastrar.');
     }
   }
-
-
-  // =========================
-  // DADOS INICIAIS DEMO
-  // =========================
-  if (clientes.length === 0) {
-    clientes.push({
-      id: Date.now(),
-      nome: "Maria da Silva",
-      cpf: "12345678900",
-      telefone: "19999999999",
-      endereco: "Rua das Flores, 120 - Centro",
-      nascimento: "1990-05-10"
-    });
-
-    receitas.push({
-      id: Date.now() + 1,
-      clienteId: clientes[0].id,
-      medicamento: "Losartana 50mg",
-      dataReceita: "2026-04-01",
-      validade: "2026-04-20",
-      proximaRetirada: "2026-04-10",
-      observacoes: "Uso contínuo"
-    });
-
-    salvarDados();
-  }
-
   // =========================
   // UTILIDADES
   // =========================
-  function gerarId() {
-    return Date.now() + Math.floor(Math.random() * 1000);
-  }
-
+  // Limpa mensagens da tela.
   function limparConteudo(id) {
     const el = document.getElementById(id);
     if (el) el.innerHTML = '';
   }
 
+  // Mostra a data no formato brasileiro.
   function formatarData(data) {
     if (!data) return '-';
     const [ano, mes, dia] = data.split('-');
     return `${dia}/${mes}/${ano}`;
   }
 
+  // Calcula quantos dias faltam para uma data.
   function diasRestantes(data) {
     const hoje = new Date();
     const alvo = new Date(data + "T00:00:00");
@@ -247,6 +213,7 @@
     return diff;
   }
 
+  // Monta o aviso visual da validade da receita.
   function statusReceita(validade) {
     const dias = diasRestantes(validade);
     if (dias < 0) return `<span class="badge badge-vencida">Vencida</span>`;
@@ -254,18 +221,22 @@
     return `<span class="badge badge-ok">Ativa</span>`;
   }
 
+  // Cria mensagem verde de sucesso.
   function mensagemSucesso(msg) {
     return `<div class="success">${escapeHtml(msg)}</div>`;
   }
 
+  // Cria mensagem vermelha de erro.
   function mensagemErro(msg) {
     return `<div class="error">${escapeHtml(msg)}</div>`;
   }
 
+  // Cria mensagem amarela de alerta.
   function mensagemAlerta(msg) {
     return `<div class="alert">${escapeHtml(msg)}</div>`;
   }
 
+  // Carrega notificacoes que o adm ja limpou.
   function carregarNotificacoesAdmOcultas() {
     try {
       return new Set(JSON.parse(localStorage.getItem(NOTIFICACOES_ADM_OCULTAS_KEY)) || []);
@@ -274,6 +245,7 @@
     }
   }
 
+  // Salva notificacoes ocultas no navegador.
   function salvarNotificacoesAdmOcultas(ids) {
     localStorage.setItem(NOTIFICACOES_ADM_OCULTAS_KEY, JSON.stringify([...ids]));
   }
@@ -281,12 +253,14 @@
   // =========================
   // LOGIN / ACESSO
   // =========================
+  // Mostra o login do cliente.
   function abrirLoginCliente() {
     document.getElementById('inicioAcesso').classList.add('hidden');
     document.getElementById('loginClienteBox').classList.remove('hidden');
     document.getElementById('cadastroClienteBox').classList.add('hidden');
   }
 
+  // Mostra o cadastro do cliente.
   function abrirCadastroCliente() {
     document.getElementById('inicioAcesso').classList.add('hidden');
     document.getElementById('loginClienteBox').classList.add('hidden');
@@ -295,11 +269,13 @@
     if (msg) msg.innerHTML = '';
   }
 
+  // Mostra o login do administrador.
   function abrirLoginAdm() {
     document.getElementById('inicioAcesso').classList.add('hidden');
     document.getElementById('loginAdmBox').classList.remove('hidden');
   }
 
+  // Volta para a tela inicial de acesso.
   function voltarTelaInicial() {
     document.getElementById('inicioAcesso').classList.remove('hidden');
     document.getElementById('loginClienteBox').classList.add('hidden');
@@ -311,6 +287,7 @@
   }
 
 
+  // Faz login do administrador.
   async function loginAdm() {
     const usuario = document.getElementById('usuarioAdm').value.trim();
     const senha = document.getElementById('senhaAdm').value.trim();
@@ -343,6 +320,7 @@
     }
   }
 
+  // Faz login do cliente pelo CPF e senha.
   async function loginCliente() {
     const cpf = document.getElementById('loginCpfCliente').value.trim();
     const senha = document.getElementById('loginSenhaCliente').value.trim();
@@ -377,6 +355,7 @@
   }
 
 
+  // Esconde o login e abre o painel principal.
   function entrarSistema() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('sistema').style.display = 'grid';
@@ -387,6 +366,7 @@
     dashboard();
   }
 
+  // Sai do sistema e volta para o login.
   function sairSistema() {
     tipoUsuario = '';
     clienteLogado = null;
@@ -399,6 +379,7 @@
   // =========================
   // MENU
   // =========================
+  // Monta o menu conforme cliente ou administrador.
   function montarMenu() {
     const menu = document.getElementById('menu');
     menu.innerHTML = `<h3>📋 Menu Principal</h3>`;
@@ -428,6 +409,7 @@
   // =========================
   // DASHBOARD
   // =========================
+  // Mostra os indicadores principais do sistema.
   function dashboard() {
     if (tipoUsuario === 'adm') {
       const totalClientes = clientes.length;
@@ -504,6 +486,7 @@
   // =========================
   // CLIENTE - PERFIL
   // =========================
+  // Mostra os dados do cliente logado.
   function telaMeuPerfil() {
     if (!clienteLogado) return;
 
@@ -539,6 +522,7 @@
     `;
   }
 
+  // Salva alteracoes do perfil do cliente.
   async function salvarMeuPerfil() {
     const nome = document.getElementById('editNomeCliente').value.trim();
     const cpf = document.getElementById('editCpfCliente').value.trim();
@@ -584,6 +568,7 @@
   // =========================
   // CLIENTE - RECEITAS
   // =========================
+  // Lista as receitas do cliente logado.
   function telaMinhasReceitas() {
     if (!clienteLogado) return;
 
@@ -621,6 +606,7 @@
     }).join('');
   }
 
+  // Mostra o formulario para o cliente cadastrar receita.
   function telaCadastrarMinhaReceita() {
     if (!clienteLogado) return;
 
@@ -667,11 +653,13 @@
     `;
   }
 
+  // Escolhe o melhor nome do medicamento analisado.
   function formatarMedicamentoAnalise(medicamento) {
     return medicamento.medicamento_programa ||
       `${medicamento.nome_lido || ''} ${medicamento.dose_lida || ''}`.trim();
   }
 
+  // Mostra na tela o resultado da analise da receita.
   function renderizarResultadoAnalise(dados) {
     const medicamentos = dados.medicamentos || [];
 
@@ -704,6 +692,7 @@
     `;
   }
 
+  // Preenche o campo medicamento com itens da Farmacia Popular.
   function preencherMedicamentosFarmaciaPopular(dados) {
     const encontrados = dados.medicamentos_farmacia_popular || [];
     if (encontrados.length === 0) return false;
@@ -730,6 +719,7 @@
     return true;
   }
 
+  // Envia a receita para IA ou OCR local analisar.
   async function analisarReceitaCliente() {
     const input = document.getElementById('arquivoReceitaCliente');
     const resultadoBox = document.getElementById('resultadoAnaliseReceitaCliente');
@@ -766,6 +756,7 @@
     }
   }
 
+  // Salva uma nova receita do cliente.
   async function cadastrarMinhaReceita() {
     const medicamento = document.getElementById('medicamentoCliente').value.trim();
     const dataReceita = document.getElementById('dataReceitaCliente').value.trim();
@@ -801,6 +792,7 @@
     }
   }
 
+  // Abre a edicao da receita do cliente.
   function editarMinhaReceita(id) {
     if (!clienteLogado) return;
 
@@ -851,6 +843,7 @@
     `;
   }
 
+  // Salva a edicao da receita do cliente.
   async function salvarEdicaoMinhaReceita(id) {
     if (!clienteLogado) return;
 
@@ -899,6 +892,7 @@
   // =========================
   // CLIENTE - NOTIFICAÇÕES
   // =========================
+  // Mostra alertas de validade e retirada para o cliente.
   function telaMinhasNotificacoes() {
     if (!clienteLogado) return;
 
@@ -943,6 +937,7 @@
   // =========================
   // ADM - CLIENTES
   // =========================
+  // Mostra a tela de gerenciamento de clientes.
   async function telaCadastroClienteAdm() {
     await sincronizarDadosBackend();
 
@@ -998,6 +993,7 @@
     atualizarListaClientesAdm();
   }
 
+  // Cadastra cliente pela area do administrador.
   async function addClienteAdm() {
     const nome = document.getElementById('nomeCliente').value.trim();
     const cpf = document.getElementById('cpfCliente').value.trim();
@@ -1046,6 +1042,7 @@
     }
   }
 
+  // Atualiza a lista de clientes na tela do adm.
   function atualizarListaClientesAdm() {
     const lista = document.getElementById('listaClientesAdm');
     if (!lista) return;
@@ -1074,6 +1071,7 @@
     }).join('');
   }
 
+  // Abre a edicao de cliente para o adm.
   function editarClienteAdm(id) {
     const cliente = clientes.find(c => c.id === id);
     if (!cliente) return;
@@ -1124,6 +1122,7 @@
     `;
   }
 
+  // Salva alteracoes de cliente feitas pelo adm.
   async function salvarEdicaoClienteAdm(id) {
     const nome = document.getElementById('editNomeAdm').value.trim();
     const cpf = document.getElementById('editCpfAdm').value.trim();
@@ -1166,6 +1165,7 @@
     }
   }
 
+  // Exclui cliente e dados relacionados.
   async function excluirClienteAdm(id) {
     if (!confirm("Deseja realmente excluir este cliente? Todas as receitas relacionadas também serão removidas.")) return;
 
@@ -1184,6 +1184,7 @@
   // =========================
   // ADM - RECEITAS
   // =========================
+  // Mostra o gerenciamento de receitas do adm.
   async function telaReceitasAdm() {
     await sincronizarDadosBackend();
 
@@ -1241,6 +1242,7 @@
     atualizarListaReceitasAdm();
   }
 
+  // Preenche o select de clientes nas receitas.
   function atualizarSelectClientesAdm() {
     const select = document.getElementById('clienteSelectAdm');
     if (!select) return;
@@ -1255,6 +1257,7 @@
     `).join('');
   }
 
+  // Cadastra receita pela area do administrador.
   async function addReceitaAdm() {
     const clienteId = Number(document.getElementById('clienteSelectAdm').value);
     const medicamento = document.getElementById('medicamentoAdm').value.trim();
@@ -1292,6 +1295,7 @@
     }
   }
 
+  // Atualiza a lista de receitas do adm.
   function atualizarListaReceitasAdm() {
     const lista = document.getElementById('listaReceitasAdm');
     if (!lista) return;
@@ -1321,6 +1325,7 @@
     }).join('');
   }
 
+  // Abre a edicao de receita para o adm.
   function editarReceitaAdm(id) {
     const receita = receitas.find(r => r.id === id);
     if (!receita) return;
@@ -1377,6 +1382,7 @@
     `).join('');
   }
 
+  // Salva alteracoes de receita feitas pelo adm.
   async function salvarEdicaoReceitaAdm(id) {
     const clienteId = Number(document.getElementById('editClienteReceitaAdm').value);
     const medicamento = document.getElementById('editMedicamentoReceitaAdm').value.trim();
@@ -1415,6 +1421,7 @@
     }
   }
 
+  // Exclui uma receita cadastrada.
   async function excluirReceitaAdm(id) {
     if (!confirm("Deseja realmente excluir esta receita?")) return;
 
@@ -1433,6 +1440,7 @@
   // =========================
   // ADM - NOTIFICAÇÕES GERAIS
   // =========================
+  // Cria alertas gerais a partir das datas das receitas.
   function gerarNotificacoesAdm() {
     const notificacoes = [];
 
@@ -1471,6 +1479,7 @@
     return notificacoes;
   }
 
+  // Mostra notificacoes gerais e envio de SMS.
   async function telaNotificacoesAdm() {
     await sincronizarDadosBackend();
 
@@ -1518,27 +1527,6 @@
       .map(item => item.html)
       .join('');
 
-    // Bloco antigo preservado, mas desativado pelo filtro de historico.
-    if (false) receitas.forEach(r => {
-      const cliente = clientes.find(c => c.id === r.clienteId);
-      const diasValidade = diasRestantes(r.validade);
-      const diasRetirada = diasRestantes(r.proximaRetirada);
-      const nomeCliente = escapeHtml(cliente?.nome || 'Cliente');
-      const medicamento = escapeHtml(r.medicamento);
-
-      if (diasValidade < 0) {
-        html += `<div class="alert">⚠️ A receita de <strong>${nomeCliente}</strong> para <strong>${medicamento}</strong> está vencida.</div>`;
-      } else if (diasValidade <= 5) {
-        html += `<div class="alert">📄 A receita de <strong>${nomeCliente}</strong> para <strong>${medicamento}</strong> vence em <strong>${diasValidade}</strong> dia(s).</div>`;
-      }
-
-      if (diasRetirada === 0) {
-        html += `<div class="success">💊 Hoje é o dia de retirada do medicamento <strong>${medicamento}</strong> para <strong>${nomeCliente}</strong>.</div>`;
-      } else if (diasRetirada > 0 && diasRetirada <= 3) {
-        html += `<div class="alert">⏰ Faltam <strong>${diasRetirada}</strong> dia(s) para <strong>${nomeCliente}</strong> retirar o medicamento <strong>${medicamento}</strong>.</div>`;
-      }
-    });
-
     if (!html) {
       html = mensagemSucesso("Nenhuma notificação pendente no momento.");
     }
@@ -1548,6 +1536,7 @@
     atualizarPainelSmsAdm();
   }
 
+  // Limpa o historico visual de notificacoes do adm.
   async function excluirHistoricoNotificacoesAdm() {
     if (!confirm('Deseja realmente excluir o historico de notificacoes?')) return;
 
@@ -1576,6 +1565,7 @@
     }
   }
 
+  // Preenche o select de clientes para SMS.
   function montarSelectSmsClientes() {
     const select = document.getElementById('smsClienteSelect');
     if (!select) return;
@@ -1590,6 +1580,7 @@
     `).join('');
   }
 
+  // Coloca uma mensagem pronta no campo de SMS.
   function aplicarModeloSms() {
     const modelo = document.getElementById('smsModeloSelect').value;
     const clienteId = Number(document.getElementById('smsClienteSelect').value);
@@ -1606,6 +1597,7 @@
     campoMensagem.value = modelos[modelo] || '';
   }
 
+  // Atualiza status e historico de SMS.
   async function atualizarPainelSmsAdm() {
     try {
       const config = await apiJson('/sms/configuracao');
@@ -1624,6 +1616,7 @@
     }
   }
 
+  // Busca o historico de SMS no backend.
   async function carregarHistoricoSms() {
     const historicoBox = document.getElementById('historicoSmsAdm');
     if (!historicoBox) return;
@@ -1651,6 +1644,7 @@
     }
   }
 
+  // Apaga o historico de SMS no banco.
   async function excluirHistoricoSms() {
     if (!confirm('Deseja realmente excluir todo o historico de SMS?')) return;
 
@@ -1673,6 +1667,7 @@
     }
   }
 
+  // Envia SMS para o cliente escolhido.
   async function enviarSmsAdm() {
     const clienteId = Number(document.getElementById('smsClienteSelect').value);
     const mensagem = document.getElementById('smsMensagem').value.trim();

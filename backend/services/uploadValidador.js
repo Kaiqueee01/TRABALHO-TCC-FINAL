@@ -5,10 +5,12 @@ const { classificarUploadPorOcr } = require('./receitaOcr');
 
 const MODELO_PADRAO = 'gpt-4o-mini';
 
+// Verifica se existe chave da OpenAI.
 function openAiConfigurado() {
   return Boolean(String(process.env.OPENAI_API_KEY || '').trim());
 }
 
+// Decide quando usar OCR local na validacao.
 function deveUsarOcrLocal(error) {
   const textoErro = String(error && (error.message || error.code || '')).toLowerCase();
 
@@ -22,12 +24,14 @@ function deveUsarOcrLocal(error) {
   );
 }
 
+// Remove arquivo enviado quando algo falha.
 function excluirArquivoUpload(file) {
   if (!file || !file.path) return;
 
   fs.promises.unlink(file.path).catch(() => {});
 }
 
+// Prepara imagem ou PDF para validar na OpenAI.
 function criarEntradaArquivo(file) {
   const base64 = fs.readFileSync(file.path, 'base64');
   const mimetype = file.mimetype || '';
@@ -47,6 +51,7 @@ function criarEntradaArquivo(file) {
   };
 }
 
+// Define o formato da classificacao do arquivo.
 function schemaClassificacaoUpload() {
   return {
     type: 'object',
@@ -93,6 +98,7 @@ function schemaClassificacaoUpload() {
   };
 }
 
+// Explica para a IA como classificar o upload.
 function promptClassificacao() {
   return `
 Voce vai classificar um arquivo enviado para um sistema de monitoramento de receitas.
@@ -111,6 +117,7 @@ Regras:
 `.trim();
 }
 
+// Classifica upload com OpenAI ou OCR local.
 async function classificarUpload(file) {
   if (!openAiConfigurado()) {
     return classificarUploadPorOcr(file);
@@ -158,6 +165,7 @@ async function classificarUpload(file) {
   }
 }
 
+// Monta mensagem de erro conforme o tipo esperado.
 function mensagemTipo(tipoEsperado) {
   if (tipoEsperado === 'receita_medica') {
     return 'O arquivo enviado nao parece ser uma receita medica. Envie uma foto ou PDF da receita.';
@@ -166,6 +174,7 @@ function mensagemTipo(tipoEsperado) {
   return 'O arquivo enviado nao parece ser um documento de identificacao. Envie RG, CPF, CNH ou documento equivalente.';
 }
 
+// Bloqueia arquivo que nao parece do tipo correto.
 async function validarUpload(file, tipoEsperado) {
   if (!file) return null;
 
@@ -182,10 +191,12 @@ async function validarUpload(file, tipoEsperado) {
   return resultado;
 }
 
+// Valida documento de identificacao.
 function validarUploadDocumento(file) {
   return validarUpload(file, 'documento_identificacao');
 }
 
+// Valida receita medica.
 function validarUploadReceita(file) {
   return validarUpload(file, 'receita_medica');
 }

@@ -1,3 +1,4 @@
+// Lista local de medicamentos do Farmacia Popular.
 const FARMACIA_POPULAR_MEDICAMENTOS = [
   { nome: 'brometo de ipratropio 0,02mg', indicacao: 'Asma', aliases: ['ipratropio 0,02mg', 'ipratropio'] },
   { nome: 'brometo de ipratropio 0,25mg', indicacao: 'Asma', aliases: ['ipratropio 0,25mg', 'ipratropio'] },
@@ -52,6 +53,7 @@ const FARMACIA_POPULAR_MEDICAMENTOS = [
   { nome: 'fralda geriatrica', indicacao: 'Incontinencia urinaria', aliases: ['fralda'] }
 ];
 
+// Padroniza texto para facilitar comparacao.
 function normalizarTexto(valor) {
   return String(valor || '')
     .normalize('NFD')
@@ -64,12 +66,14 @@ function normalizarTexto(valor) {
     .trim();
 }
 
+// Procura dosagens como 50mg ou 100ui/ml.
 function extrairDoses(valor) {
   const texto = normalizarTexto(valor);
   return Array.from(texto.matchAll(/\d+(?:,\d+)?\s*(?:mg|mcg|ui\/ml|ui|ml)/g))
     .map((match) => match[0].replace(/\s+/g, ''));
 }
 
+// Confere se a dose lida combina com a lista.
 function dosesCompativeis(entrada, item) {
   const dosesEntrada = extrairDoses(entrada);
   const dosesItem = extrairDoses(item.nome);
@@ -79,6 +83,7 @@ function dosesCompativeis(entrada, item) {
   return dosesEntrada.some((dose) => dosesItem.includes(dose));
 }
 
+// Prepara nomes e apelidos para busca.
 function prepararMedicamento(item) {
   return {
     ...item,
@@ -89,6 +94,7 @@ function prepararMedicamento(item) {
 
 const MEDICAMENTOS_INDEXADOS = FARMACIA_POPULAR_MEDICAMENTOS.map(prepararMedicamento);
 
+// Calcula o quanto o texto parece um medicamento.
 function pontuarMedicamento(entradaNormalizada, item) {
   const termos = [item.normalizado, ...item.aliasesNormalizados].filter(Boolean);
   let melhorPontuacao = 0;
@@ -113,6 +119,7 @@ function pontuarMedicamento(entradaNormalizada, item) {
   return melhorPontuacao;
 }
 
+// Busca um medicamento dentro da lista do programa.
 function buscarMedicamentoFarmaciaPopular(valor) {
   const entradaNormalizada = normalizarTexto(valor);
   if (!entradaNormalizada) return null;
@@ -138,6 +145,7 @@ function buscarMedicamentoFarmaciaPopular(valor) {
   };
 }
 
+// Gera texto resumido da lista para a IA.
 function resumoMedicamentosFarmaciaPopular() {
   return FARMACIA_POPULAR_MEDICAMENTOS
     .map((item) => `${item.nome} (${item.indicacao})`)

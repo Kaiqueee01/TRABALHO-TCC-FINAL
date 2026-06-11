@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS sms_envios (
   cliente_id INT NULL,
   telefone VARCHAR(20) NOT NULL,
   mensagem TEXT NOT NULL,
-  provider VARCHAR(50) DEFAULT 'twilio',
+  provider VARCHAR(50) DEFAULT 'smsdev',
   provider_sid VARCHAR(120) NULL,
   status VARCHAR(40) DEFAULT 'pendente',
   erro TEXT NULL,

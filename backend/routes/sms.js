@@ -5,10 +5,12 @@ const db = require('../database');
 
 const router = express.Router();
 
+// Limpa texto antes de usar.
 function texto(valor) {
   return String(valor || '').trim();
 }
 
+// Deixa telefone no formato brasileiro com +55.
 function normalizarTelefoneBrasil(telefone) {
   const numeros = texto(telefone).replace(/\D/g, '');
 
@@ -19,6 +21,7 @@ function normalizarTelefoneBrasil(telefone) {
   return numeros.startsWith('+') ? numeros : `+${numeros}`;
 }
 
+// Escolhe SMSDev ou Twilio pelo .env.
 function provedorSms() {
   const provider = texto(process.env.SMS_PROVIDER).toLowerCase();
 
@@ -28,6 +31,7 @@ function provedorSms() {
   return 'twilio';
 }
 
+// Confere se Twilio tem dados no .env.
 function smsConfiguradoTwilio() {
   return Boolean(
     process.env.TWILIO_ACCOUNT_SID &&
@@ -36,10 +40,12 @@ function smsConfiguradoTwilio() {
   );
 }
 
+// Confere se SMSDev tem chave no .env.
 function smsConfiguradoSmsDev() {
   return Boolean(process.env.SMSDEV_KEY);
 }
 
+// Diz se o provedor atual esta pronto.
 function smsConfigurado() {
   const provider = provedorSms();
 
@@ -49,6 +55,7 @@ function smsConfigurado() {
   return false;
 }
 
+// Explica o que falta configurar para SMS.
 function mensagemConfiguracao() {
   const provider = provedorSms();
 
@@ -63,6 +70,7 @@ function mensagemConfiguracao() {
   return 'SMS nao configurado. Use SMS_PROVIDER=twilio ou SMS_PROVIDER=smsdev no backend/.env.';
 }
 
+// Faz chamada GET e tenta ler JSON.
 function httpGetJson(url) {
   return new Promise((resolve, reject) => {
     const req = https.get(url, (res) => {
@@ -92,6 +100,7 @@ function httpGetJson(url) {
   });
 }
 
+// Envia SMS usando Twilio.
 async function enviarSmsTwilio({ telefone, mensagem }) {
   const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
   const envio = await client.messages.create({
@@ -107,6 +116,7 @@ async function enviarSmsTwilio({ telefone, mensagem }) {
   };
 }
 
+// Envia SMS usando SMSDev.
 async function enviarSmsDev({ telefone, mensagem }) {
   const numero = telefone.replace(/\D/g, '');
   const url = new URL('https://api.smsdev.com.br/v1/send');
@@ -132,6 +142,7 @@ async function enviarSmsDev({ telefone, mensagem }) {
   };
 }
 
+// Envia SMS pelo provedor escolhido.
 async function enviarSms({ telefone, mensagem }) {
   const provider = provedorSms();
 
@@ -146,6 +157,7 @@ async function enviarSms({ telefone, mensagem }) {
   throw new Error(`Provedor SMS invalido: ${provider}`);
 }
 
+// Salva no banco cada tentativa de SMS.
 function salvarHistorico({ clienteId, telefone, mensagem, provider, sid, status, erro }, callback) {
   db.run(
     `
@@ -158,6 +170,7 @@ function salvarHistorico({ clienteId, telefone, mensagem, provider, sid, status,
   );
 }
 
+// Mostra status da configuracao de SMS.
 router.get('/sms/configuracao', (req, res) => {
   res.json({
     success: true,
@@ -166,6 +179,7 @@ router.get('/sms/configuracao', (req, res) => {
   });
 });
 
+// Lista ultimos SMS enviados.
 router.get('/sms/historico', (req, res) => {
   db.all(
     `
@@ -192,6 +206,7 @@ router.get('/sms/historico', (req, res) => {
   );
 });
 
+// Apaga o historico de SMS.
 router.delete('/sms/historico', (req, res) => {
   db.run(
     `DELETE FROM sms_envios`,
@@ -213,6 +228,7 @@ router.delete('/sms/historico', (req, res) => {
   );
 });
 
+// Envia SMS para um cliente escolhido.
 router.post('/sms/enviar', (req, res) => {
   const clienteId = Number(req.body.cliente_id);
   const mensagem = texto(req.body.mensagem);

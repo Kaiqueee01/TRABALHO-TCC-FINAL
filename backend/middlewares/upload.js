@@ -2,8 +2,10 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+// Pasta onde os uploads ficam salvos.
 const uploadsRoot = path.join(__dirname, '..', 'uploads');
 
+// Cria a pasta se ela ainda nao existir.
 function ensureDir(dir) {
   if (fs.existsSync(dir)) {
     const stat = fs.statSync(dir);
@@ -23,6 +25,7 @@ function ensureDir(dir) {
   return dir;
 }
 
+// Define onde cada tipo de arquivo sera salvo.
 const storage = multer.diskStorage({
 
   destination: (req, file, cb) => {
@@ -44,6 +47,7 @@ const storage = multer.diskStorage({
   }
 });
 
+// Aceita apenas PDF, JPG e PNG.
 const fileFilter = (req, file, cb) => {
 
   const allowed = [
@@ -62,6 +66,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Configura limite e regras de upload.
 module.exports = multer({
   storage,
   fileFilter,

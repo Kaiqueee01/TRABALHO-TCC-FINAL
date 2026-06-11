@@ -8,10 +8,12 @@ const {
   validarUploadDocumento
 } = require('../services/uploadValidador');
 
+// Limpa textos recebidos do formulario.
 function texto(valor) {
   return String(valor || '').trim();
 }
 
+// Remove dados sensiveis antes de responder.
 function clienteSeguro(row) {
   if (!row) return null;
 
@@ -30,6 +32,7 @@ function clienteSeguro(row) {
 /* =========================
    LOGIN ADM
 ========================= */
+// Confere usuario e senha do administrador.
 router.post('/login/adm', async (req, res) => {
 
   const usuario = texto(req.body.usuario);
@@ -53,6 +56,7 @@ router.post('/login/adm', async (req, res) => {
 /* =========================
    CADASTRO CLIENTE (JSON)
 ========================= */
+// Cadastra cliente sem documento primeiro.
 router.post('/cadastro', async (req, res) => {
   try {
     const {
@@ -140,6 +144,7 @@ router.post('/cadastro', async (req, res) => {
    UPLOAD DOCUMENTO CLIENTE (multipart)
 ========================= */
 router.post(
+// Recebe e vincula o documento do cliente.
   '/cadastro-documento',
   upload.single('documento'),
   async (req, res) => {
@@ -205,6 +210,7 @@ router.post(
 /* =========================
    LOGIN CLIENTE
 ========================= */
+// Confere CPF e senha do cliente.
 router.post('/login/cliente', (req, res) => {
 
   const cpf = texto(req.body.cpf);

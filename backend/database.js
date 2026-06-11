@@ -2,15 +2,18 @@ const path = require('path');
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
 
+// Carrega variaveis do arquivo .env.
 dotenv.config({ path: path.join(__dirname, '..', '.env'), quiet: true });
 dotenv.config({ path: path.join(__dirname, '.env'), quiet: true });
 
+// Nome do banco usado pelo sistema.
 const databaseName = process.env.DB_NAME || 'receitacerta';
 
 if (!/^[a-zA-Z0-9_]+$/.test(databaseName)) {
   throw new Error('DB_NAME deve conter apenas letras, numeros e underline.');
 }
 
+// Dados de conexao com o MySQL.
 const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT) || 3306,
@@ -25,6 +28,7 @@ const dbConfig = {
 
 let pool;
 
+// Adapta erro duplicado para as rotas antigas.
 function mysqlError(err) {
   if (err && err.code === 'ER_DUP_ENTRY') {
     err.code = 'SQLITE_CONSTRAINT';
@@ -33,6 +37,7 @@ function mysqlError(err) {
   return err;
 }
 
+// Cria o banco se ele ainda nao existir.
 async function criarBancoSeNecessario() {
   const connection = await mysql.createConnection({
     host: dbConfig.host,
@@ -50,6 +55,7 @@ async function criarBancoSeNecessario() {
   await connection.end();
 }
 
+// Cria as tabelas principais do sistema.
 async function criarTabelas() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS clientes (
@@ -119,7 +125,7 @@ async function criarTabelas() {
       cliente_id INT NULL,
       telefone VARCHAR(20) NOT NULL,
       mensagem TEXT NOT NULL,
-      provider VARCHAR(50) DEFAULT 'twilio',
+      provider VARCHAR(50) DEFAULT 'smsdev',
       provider_sid VARCHAR(120) NULL,
       status VARCHAR(40) DEFAULT 'pendente',
       erro TEXT NULL,
@@ -137,6 +143,7 @@ async function criarTabelas() {
   await criarIndiceSeNecessario('sms_envios', 'idx_sms_cliente_id', 'cliente_id');
 }
 
+// Cria indice somente se ele ainda nao existir.
 async function criarIndiceSeNecessario(tabela, indice, coluna) {
   const [rows] = await pool.execute(
     `
@@ -155,6 +162,7 @@ async function criarIndiceSeNecessario(tabela, indice, coluna) {
   }
 }
 
+// Abre conexao e prepara o banco ao iniciar.
 async function init() {
   await criarBancoSeNecessario();
   pool = mysql.createPool(dbConfig);
@@ -164,11 +172,13 @@ async function init() {
 
 const ready = init();
 
+// Espera o banco ficar pronto antes de executar SQL.
 async function execute(sql, params = []) {
   await ready;
   return pool.execute(sql, params);
 }
 
+// Interface simples usada pelas rotas.
 const db = {
   ready,
 

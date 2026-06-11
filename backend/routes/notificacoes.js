@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../database');
 
 /* NOTIFICAÇÕES GERAIS (OPCIONAL FUTURO) */
+// Lista dados usados para notificacoes.
 router.get('/notificacoes', (req, res) => {
   const sql = `
     SELECT receitas.*, clientes.nome AS cliente_nome
@@ -22,6 +23,7 @@ router.get('/notificacoes', (req, res) => {
   });
 });
 
+// Limpa notificacoes salvas no banco.
 router.delete('/notificacoes/historico', (req, res) => {
   db.run(`DELETE FROM notificacoes`, [], function (err) {
     if (err) {

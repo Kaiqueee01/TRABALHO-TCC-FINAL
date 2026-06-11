@@ -6,16 +6,19 @@ const {
   normalizarTexto
 } = require('./farmaciaPopular');
 
+// Confere se o arquivo e imagem.
 function imagemSuportada(file) {
   return Boolean(file && file.path && String(file.mimetype || '').startsWith('image/'));
 }
 
+// Pega a primeira dose encontrada no texto.
 function extrairDose(valor) {
   const texto = normalizarTexto(valor);
   const match = texto.match(/\d+(?:,\d+)?\s*(?:mg|mcg|ui\/ml|ui|ml)/);
   return match ? match[0].replace(/\s+/g, '') : '';
 }
 
+// Quebra o texto do OCR em linhas uteis.
 function linhasDoTexto(texto) {
   return String(texto || '')
     .split(/\r?\n/)
@@ -23,6 +26,7 @@ function linhasDoTexto(texto) {
     .filter(Boolean);
 }
 
+// Roda OCR usando o idioma informado.
 async function reconhecerComIdioma(file, idioma) {
   const worker = await createWorker(idioma, 1, {
     cachePath: path.join(__dirname, '..')
@@ -36,6 +40,7 @@ async function reconhecerComIdioma(file, idioma) {
   }
 }
 
+// Extrai texto da imagem com OCR local.
 async function extrairTextoComOcr(file) {
   if (!imagemSuportada(file)) {
     const erro = new Error('OCR local aceita apenas imagens JPG ou PNG. Para PDF, use uma foto da receita ou configure a OpenAI API.');
@@ -50,6 +55,7 @@ async function extrairTextoComOcr(file) {
   }
 }
 
+// Procura medicamentos da lista no texto lido.
 function localizarMedicamentosFarmaciaPopular(texto) {
   const encontrados = new Map();
   const linhas = linhasDoTexto(texto);
@@ -95,6 +101,7 @@ function localizarMedicamentosFarmaciaPopular(texto) {
   return [...encontrados.values()];
 }
 
+// Decide se o texto parece receita ou documento.
 function classificarTextoOcr(texto) {
   const textoNormalizado = normalizarTexto(texto);
   const medicamentos = localizarMedicamentosFarmaciaPopular(texto);
@@ -165,11 +172,13 @@ function classificarTextoOcr(texto) {
   };
 }
 
+// Valida upload usando OCR local.
 async function classificarUploadPorOcr(file) {
   const texto = await extrairTextoComOcr(file);
   return classificarTextoOcr(texto);
 }
 
+// Analisa receita usando apenas OCR local.
 async function analisarReceitaComOcr(file) {
   const texto = await extrairTextoComOcr(file);
   const medicamentos = localizarMedicamentosFarmaciaPopular(texto);

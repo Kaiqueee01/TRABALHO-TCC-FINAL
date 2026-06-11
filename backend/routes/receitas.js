@@ -10,10 +10,12 @@ const {
   validarUploadReceita
 } = require('../services/uploadValidador');
 
+// Limpa textos recebidos do formulario.
 function texto(valor) {
   return String(valor || '').trim();
 }
 
+// Confere campos obrigatorios da receita.
 function validarReceita(body) {
   const dados = {
     cliente_id: Number(body.cliente_id),
@@ -34,6 +36,7 @@ function validarReceita(body) {
 }
 
 // Listar receitas
+// Lista receitas com o nome do cliente.
 router.get('/receitas', (req, res) => {
   const sql = `
     SELECT receitas.*, clientes.nome AS cliente_nome
@@ -59,6 +62,7 @@ router.get('/receitas', (req, res) => {
 
 // Analisar receita com IA para preencher medicamentos automaticamente
 router.post(
+// Analisa a imagem da receita com IA ou OCR local.
   '/receitas/analisar',
   upload.single('fotoReceita'),
   async (req, res) => {
@@ -81,6 +85,7 @@ router.post(
 
 // Cadastrar receita
 router.post(
+// Cadastra uma nova receita.
   '/receitas',
   upload.single('fotoReceita'),
   async (req, res) => {
@@ -152,6 +157,7 @@ router.post(
 
 // Atualizar receita
 router.put(
+// Atualiza uma receita existente.
   '/receitas/:id',
   upload.single('fotoReceita'),
   async (req, res) => {
@@ -250,6 +256,7 @@ router.put(
 );
 
 // Excluir receita
+// Exclui uma receita pelo id.
 router.delete('/receitas/:id', (req, res) => {
   db.run(
     `DELETE FROM receitas WHERE id = ?`,

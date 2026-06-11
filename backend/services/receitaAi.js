@@ -9,10 +9,12 @@ const { analisarReceitaComOcr } = require('./receitaOcr');
 
 const MODELO_PADRAO = 'gpt-4o-mini';
 
+// Verifica se existe chave da OpenAI.
 function openAiConfigurado() {
   return Boolean(String(process.env.OPENAI_API_KEY || '').trim());
 }
 
+// Decide quando cair para OCR local.
 function deveUsarOcrLocal(error) {
   const textoErro = String(error && (error.message || error.code || '')).toLowerCase();
 
@@ -26,6 +28,7 @@ function deveUsarOcrLocal(error) {
   );
 }
 
+// Prepara imagem ou PDF para enviar a OpenAI.
 function criarEntradaArquivo(file) {
   const base64 = fs.readFileSync(file.path, 'base64');
   const mimetype = file.mimetype || '';
@@ -45,6 +48,7 @@ function criarEntradaArquivo(file) {
   };
 }
 
+// Define o formato esperado da resposta da IA.
 function schemaAnaliseReceita() {
   return {
     type: 'object',
@@ -88,6 +92,7 @@ function schemaAnaliseReceita() {
   };
 }
 
+// Cria a instrucao enviada para a IA.
 function montarPrompt() {
   return `
 Voce e um assistente de leitura de receitas medicas brasileiras.
@@ -101,6 +106,7 @@ ${resumoMedicamentosFarmaciaPopular()}
 `.trim();
 }
 
+// Tenta ler JSON mesmo se vier com texto extra.
 function parseJsonSeguro(texto) {
   try {
     return JSON.parse(texto);
@@ -116,6 +122,7 @@ function parseJsonSeguro(texto) {
   }
 }
 
+// Marca quais medicamentos sao da Farmacia Popular.
 function enriquecerResultado(resultado) {
   const medicamentos = Array.isArray(resultado.medicamentos) ? resultado.medicamentos : [];
 
@@ -144,6 +151,7 @@ function enriquecerResultado(resultado) {
   };
 }
 
+// Analisa receita com OpenAI ou OCR local.
 async function analisarReceitaComIa(file) {
   if (!openAiConfigurado()) {
     return analisarReceitaComOcr(file);

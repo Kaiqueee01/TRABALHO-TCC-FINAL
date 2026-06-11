@@ -8,10 +8,12 @@ const {
   validarUploadDocumento
 } = require('../services/uploadValidador');
 
+// Limpa textos recebidos do formulario.
 function texto(valor) {
   return String(valor || '').trim();
 }
 
+// Formata cliente para enviar ao frontend.
 function clienteResponse(row) {
   return {
     id: row.id,
@@ -27,6 +29,7 @@ function clienteResponse(row) {
 /* =========================
    LISTAR CLIENTES
 ========================= */
+// Lista todos os clientes.
 router.get('/clientes', (req, res) => {
   db.all(
     `
@@ -54,6 +57,7 @@ router.get('/clientes', (req, res) => {
 /* =========================
    CADASTRAR CLIENTE PELO ADM
 ========================= */
+// Cadastra cliente pelo administrador.
 router.post('/clientes', upload.single('documento'), async (req, res) => {
   try {
     const nome = texto(req.body.nome);
@@ -128,6 +132,7 @@ router.post('/clientes', upload.single('documento'), async (req, res) => {
 /* =========================
    EDITAR CLIENTE
 ========================= */
+// Atualiza dados de um cliente.
 router.put('/clientes/:id', upload.single('documento'), async (req, res) => {
 
   try {
@@ -232,6 +237,7 @@ router.put('/clientes/:id', upload.single('documento'), async (req, res) => {
 /* =========================
    EXCLUIR CLIENTE
 ========================= */
+// Exclui cliente e dados ligados a ele.
 router.delete('/clientes/:id', (req, res) => {
 
   db.run(
