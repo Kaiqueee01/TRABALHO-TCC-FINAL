@@ -167,7 +167,7 @@ async function init() {
   await criarBancoSeNecessario();
   pool = mysql.createPool(dbConfig);
   await criarTabelas();
-  console.log(`Banco MySQL conectado com sucesso: ${dbConfig.host}:${dbConfig.port}/${databaseName}`);
+  console.log('Banco de dados conectado com sucesso.');
 }
 
 const ready = init();

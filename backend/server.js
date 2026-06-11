@@ -114,8 +114,8 @@ function detalheErro(err) {
 // Sobe o servidor na porta configurada.
 function iniciarServidor() {
   const server = app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-    console.log(`Acesse: http://localhost:${PORT}`);
+    console.log('Sistema IMR iniciado com sucesso.');
+    console.log(`Acesse o sistema em: http://localhost:${PORT}`);
   });
 
   server.on('error', (err) => {
