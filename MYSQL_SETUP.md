@@ -17,7 +17,7 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=sua_senha_aqui
-DB_NAME=receitacerta
+DB_NAME=sistema_inteligente_monitoramento_receitas
 ```
 
 ## 2. Rode o servidor
@@ -30,8 +30,9 @@ npm start
 Se a conexao estiver correta, o terminal mostrara:
 
 ```text
-Banco MySQL conectado com sucesso
-Acesse: http://localhost:3000
+Banco de dados conectado com sucesso.
+SISTEMA INTELIGENTE DE MONITORAMENTO DE RECEITAS iniciado com sucesso.
+Acesse o sistema em: http://localhost:3000
 ```
 
 ## 3. Opcional: criar pelo Workbench

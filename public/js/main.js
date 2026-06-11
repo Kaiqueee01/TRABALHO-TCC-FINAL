@@ -459,7 +459,7 @@
 
         <div class="card">
           <h2>📊 Dashboard Administrativo</h2>
-          <p>Bem-vindo ao painel administrativo do <strong>Sistema de Monitoramentos de Receitas IMR</strong>.</p>
+          <p>Bem-vindo ao painel administrativo do <strong>SISTEMA INTELIGENTE DE MONITORAMENTO DE RECEITAS</strong>.</p>
           <p>Este sistema foi projetado para monitorar receitas médicas, acompanhar prazos de retirada de medicamentos e apoiar a gestão de pacientes em programas públicos de assistência farmacêutica.</p>
           <div class="footer-note">
             Sistema desenvolvido em versão acadêmica avançada para TCC de Análise e Desenvolvimento de Sistemas.
@@ -1609,9 +1609,9 @@
     const campoMensagem = document.getElementById('smsMensagem');
 
     const modelos = {
-      retirada: `Olá, ${nome}. Lembrete do Sistema IMR: verifique a data de retirada do seu medicamento e compareça à farmácia no prazo indicado.`,
-      validade: `Olá, ${nome}. Sistema IMR: sua receita pode estar próxima do vencimento. Confira suas informações e procure atendimento se necessário.`,
-      documento: `Olá, ${nome}. Sistema IMR: há uma atualização importante sobre seu cadastro. Entre em contato com a unidade responsável.`
+      retirada: `Olá, ${nome}. Lembrete do SISTEMA INTELIGENTE DE MONITORAMENTO DE RECEITAS: verifique a data de retirada do seu medicamento e compareça à farmácia no prazo indicado.`,
+      validade: `Olá, ${nome}. SISTEMA INTELIGENTE DE MONITORAMENTO DE RECEITAS: sua receita pode estar próxima do vencimento. Confira suas informações e procure atendimento se necessário.`,
+      documento: `Olá, ${nome}. SISTEMA INTELIGENTE DE MONITORAMENTO DE RECEITAS: há uma atualização importante sobre seu cadastro. Entre em contato com a unidade responsável.`
     };
 
     campoMensagem.value = modelos[modelo] || '';

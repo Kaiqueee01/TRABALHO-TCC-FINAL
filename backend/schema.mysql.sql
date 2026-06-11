@@ -1,8 +1,8 @@
-CREATE DATABASE IF NOT EXISTS receitacerta
+CREATE DATABASE IF NOT EXISTS sistema_inteligente_monitoramento_receitas
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-USE receitacerta;
+USE sistema_inteligente_monitoramento_receitas;
 
 CREATE TABLE IF NOT EXISTS clientes (
   id INT AUTO_INCREMENT PRIMARY KEY,

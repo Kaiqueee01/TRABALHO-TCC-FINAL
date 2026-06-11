@@ -114,7 +114,7 @@ function detalheErro(err) {
 // Sobe o servidor na porta configurada.
 function iniciarServidor() {
   const server = app.listen(PORT, () => {
-    console.log('Sistema IMR iniciado com sucesso.');
+    console.log('SISTEMA INTELIGENTE DE MONITORAMENTO DE RECEITAS iniciado com sucesso.');
     console.log(`Acesse o sistema em: http://localhost:${PORT}`);
   });
 
@@ -142,7 +142,7 @@ db.ready
     console.error('\nNão foi possível conectar ao MySQL.');
     console.error(`Host: ${process.env.DB_HOST || 'localhost'}`);
     console.error(`Porta: ${process.env.DB_PORT || '3306'}`);
-    console.error(`Banco: ${process.env.DB_NAME || 'receitacerta'}`);
+    console.error(`Banco: ${process.env.DB_NAME || 'sistema_inteligente_monitoramento_receitas'}`);
     console.error('\nConfira se o MySQL está instalado, aberto e se usuário/senha estão corretos.');
     console.error('Edite o arquivo backend/.env com seus dados de conexão.');
     console.error('\nDetalhe do erro:', detalheErro(err));

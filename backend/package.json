@@ -1,5 +1,5 @@
 {
-  "name": "receitacerta-backend",
+  "name": "sistema-inteligente-monitoramento-receitas-backend",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {

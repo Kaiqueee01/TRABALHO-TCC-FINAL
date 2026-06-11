@@ -7,7 +7,7 @@ dotenv.config({ path: path.join(__dirname, '..', '.env'), quiet: true });
 dotenv.config({ path: path.join(__dirname, '.env'), quiet: true });
 
 // Nome do banco usado pelo sistema.
-const databaseName = process.env.DB_NAME || 'receitacerta';
+const databaseName = process.env.DB_NAME || 'sistema_inteligente_monitoramento_receitas';
 
 if (!/^[a-zA-Z0-9_]+$/.test(databaseName)) {
   throw new Error('DB_NAME deve conter apenas letras, numeros e underline.');

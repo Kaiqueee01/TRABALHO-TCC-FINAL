@@ -1,6 +1,6 @@
-# Sistema de Monitoramento de Receitas IMR
+# SISTEMA INTELIGENTE DE MONITORAMENTO DE RECEITAS
 
-Sistema web para cadastro de clientes, monitoramento de receitas, envio de SMS e apoio na identificacao de medicamentos do Programa Farmacia Popular.
+Sistema web para cadastro de clientes, monitoramento inteligente de receitas, envio de SMS e apoio na identificacao de medicamentos do Programa Farmacia Popular.
 
 ## Como abrir o sistema
 
@@ -42,6 +42,6 @@ Para analise de receita, o sistema tenta usar OpenAI quando `OPENAI_API_KEY` est
 ## Observacoes
 
 - O MySQL precisa estar instalado e rodando.
-- O banco padrao e `receitacerta`.
+- O banco padrao e `sistema_inteligente_monitoramento_receitas`.
 - O OCR local funciona melhor com foto nitida, bem iluminada e sem cortes.
 - PDFs ainda funcionam melhor com OpenAI; para usar OCR local, envie uma foto ou imagem da receita.
