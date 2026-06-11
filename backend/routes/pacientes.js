@@ -124,7 +124,7 @@ router.post('/clientes', upload.single('documento'), async (req, res) => {
     excluirArquivoUpload(req.file);
     res.status(error.statusCode || 500).json({
       success: false,
-      mensagem: error.message || 'Erro ao cadastrar cliente.'
+      mensagem: error.mensagemCliente || error.message || 'Erro ao cadastrar cliente.'
     });
   }
 });
@@ -229,7 +229,7 @@ router.put('/clientes/:id', upload.single('documento'), async (req, res) => {
     excluirArquivoUpload(req.file);
     res.status(error.statusCode || 500).json({
       success: false,
-      mensagem: error.message || 'Erro ao atualizar cliente.'
+      mensagem: error.mensagemCliente || error.message || 'Erro ao atualizar cliente.'
     });
   }
 });

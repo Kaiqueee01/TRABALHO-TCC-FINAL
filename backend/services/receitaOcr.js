@@ -43,7 +43,7 @@ async function reconhecerComIdioma(file, idioma) {
 // Extrai texto da imagem com OCR local.
 async function extrairTextoComOcr(file) {
   if (!imagemSuportada(file)) {
-    const erro = new Error('OCR local aceita apenas imagens JPG ou PNG. Para PDF, use uma foto da receita ou configure a OpenAI API.');
+    const erro = new Error('A verificação local aceita apenas imagens JPG ou PNG. Para PDF, envie uma foto nítida da receita ou tente novamente mais tarde.');
     erro.statusCode = 400;
     throw erro;
   }

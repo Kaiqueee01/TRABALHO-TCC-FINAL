@@ -73,7 +73,7 @@ router.post(
     } catch (error) {
       return res.status(error.statusCode || 500).json({
         success: false,
-        mensagem: error.message || 'Erro ao analisar receita com IA.'
+        mensagem: error.mensagemCliente || error.message || 'Erro ao analisar receita com IA.'
       });
     } finally {
       if (req.file && req.file.path) {
@@ -149,7 +149,7 @@ router.post(
       excluirArquivoUpload(req.file);
       return res.status(error.statusCode || 500).json({
         success: false,
-        mensagem: error.message || 'Erro ao cadastrar receita.'
+        mensagem: error.mensagemCliente || error.message || 'Erro ao cadastrar receita.'
       });
     }
   }
@@ -248,7 +248,7 @@ router.put(
       excluirArquivoUpload(req.file);
       res.status(error.statusCode || 500).json({
         success: false,
-        mensagem: error.message || 'Erro ao atualizar receita.'
+        mensagem: error.mensagemCliente || error.message || 'Erro ao atualizar receita.'
       });
 
     }

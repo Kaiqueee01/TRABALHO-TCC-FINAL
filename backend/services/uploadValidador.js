@@ -4,6 +4,7 @@ const OpenAI = require('openai');
 const { classificarUploadPorOcr } = require('./receitaOcr');
 
 const MODELO_PADRAO = 'gpt-4o-mini';
+const MENSAGEM_VALIDACAO_INDISPONIVEL = 'No momento, não foi possível concluir a verificação automática do arquivo enviado. Por favor, tente novamente mais tarde ou envie uma foto nítida do documento.';
 
 // Verifica se existe chave da OpenAI.
 function openAiConfigurado() {
@@ -22,6 +23,23 @@ function deveUsarOcrLocal(error) {
     textoErro.includes('insufficient_quota') ||
     textoErro.includes('billing')
   );
+}
+
+// Cria mensagem formal quando a validacao automatica falha.
+function erroValidacaoIndisponivel() {
+  const erro = new Error(MENSAGEM_VALIDACAO_INDISPONIVEL);
+  erro.statusCode = 503;
+  erro.mensagemCliente = MENSAGEM_VALIDACAO_INDISPONIVEL;
+  return erro;
+}
+
+// Usa OCR local sem expor erro tecnico ao cliente.
+async function classificarComOcrSeguro(file) {
+  try {
+    return await classificarUploadPorOcr(file);
+  } catch (error) {
+    throw erroValidacaoIndisponivel();
+  }
 }
 
 // Remove arquivo enviado quando algo falha.
@@ -120,7 +138,7 @@ Regras:
 // Classifica upload com OpenAI ou OCR local.
 async function classificarUpload(file) {
   if (!openAiConfigurado()) {
-    return classificarUploadPorOcr(file);
+    return classificarComOcrSeguro(file);
   }
 
   if (!file) {
@@ -158,7 +176,7 @@ async function classificarUpload(file) {
     return JSON.parse(response.output_text || '{}');
   } catch (error) {
     if (deveUsarOcrLocal(error)) {
-      return classificarUploadPorOcr(file);
+      return classificarComOcrSeguro(file);
     }
 
     throw error;

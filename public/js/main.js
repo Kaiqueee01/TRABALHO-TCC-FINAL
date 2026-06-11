@@ -236,6 +236,26 @@
     return `<div class="alert">${escapeHtml(msg)}</div>`;
   }
 
+  // Deixa erro tecnico de IA em uma mensagem formal.
+  function mensagemFormalAnaliseReceita(error) {
+    const texto = String(error?.message || error || '').toLowerCase();
+    const erroTecnicoIa =
+      texto.includes('429') ||
+      texto.includes('quota') ||
+      texto.includes('billing') ||
+      texto.includes('insufficient') ||
+      texto.includes('credito') ||
+      texto.includes('crédito') ||
+      texto.includes('openai') ||
+      texto.includes('ocr local');
+
+    if (erroTecnicoIa) {
+      return 'No momento, a verificação automática da receita está temporariamente indisponível. Por favor, tente novamente mais tarde ou envie uma foto nítida da receita.';
+    }
+
+    return error?.message || 'Não foi possível concluir a verificação da receita. Tente novamente.';
+  }
+
   // Carrega notificacoes que o adm ja limpou.
   function carregarNotificacoesAdmOcultas() {
     try {
@@ -732,7 +752,7 @@
       return;
     }
 
-    resultadoBox.innerHTML = mensagemAlerta('Analisando receita. Se a IA estiver sem credito, o OCR local sera usado.');
+    resultadoBox.innerHTML = mensagemAlerta('Analisando receita. Aguarde enquanto verificamos as informações do arquivo.');
 
     try {
       const form = new FormData();
@@ -748,11 +768,11 @@
 
       if (!preencheu) {
         resultadoBox.innerHTML =
-          mensagemAlerta('A IA leu a receita, mas nao encontrou medicamentos da lista do Farmacia Popular.') +
+          mensagemAlerta('A análise foi concluída, mas não foram encontrados medicamentos da lista do Farmácia Popular.') +
           resultadoBox.innerHTML;
       }
     } catch (error) {
-      resultadoBox.innerHTML = mensagemErro(error.message);
+      resultadoBox.innerHTML = mensagemErro(mensagemFormalAnaliseReceita(error));
     }
   }
 

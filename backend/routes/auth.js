@@ -201,7 +201,7 @@ router.post(
       excluirArquivoUpload(req.file);
       return res.status(error.statusCode || 500).json({
         success: false,
-        erro: error.message
+        erro: error.mensagemCliente || error.message
       });
     }
   }

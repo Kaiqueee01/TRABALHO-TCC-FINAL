@@ -8,6 +8,7 @@ const {
 const { analisarReceitaComOcr } = require('./receitaOcr');
 
 const MODELO_PADRAO = 'gpt-4o-mini';
+const MENSAGEM_ANALISE_INDISPONIVEL = 'No momento, a verificação automática da receita está temporariamente indisponível. Por favor, tente novamente mais tarde ou envie uma foto nítida da receita para análise local.';
 
 // Verifica se existe chave da OpenAI.
 function openAiConfigurado() {
@@ -26,6 +27,23 @@ function deveUsarOcrLocal(error) {
     textoErro.includes('insufficient_quota') ||
     textoErro.includes('billing')
   );
+}
+
+// Cria mensagem formal quando a verificacao automatica falha.
+function erroAnaliseIndisponivel() {
+  const erro = new Error(MENSAGEM_ANALISE_INDISPONIVEL);
+  erro.statusCode = 503;
+  erro.mensagemCliente = MENSAGEM_ANALISE_INDISPONIVEL;
+  return erro;
+}
+
+// Usa OCR local sem expor erro tecnico ao cliente.
+async function analisarComOcrSeguro(file) {
+  try {
+    return await analisarReceitaComOcr(file);
+  } catch (error) {
+    throw erroAnaliseIndisponivel();
+  }
 }
 
 // Prepara imagem ou PDF para enviar a OpenAI.
@@ -154,7 +172,7 @@ function enriquecerResultado(resultado) {
 // Analisa receita com OpenAI ou OCR local.
 async function analisarReceitaComIa(file) {
   if (!openAiConfigurado()) {
-    return analisarReceitaComOcr(file);
+    return analisarComOcrSeguro(file);
   }
 
   if (!file) {
@@ -201,7 +219,7 @@ async function analisarReceitaComIa(file) {
     };
   } catch (error) {
     if (deveUsarOcrLocal(error)) {
-      return analisarReceitaComOcr(file);
+      return analisarComOcrSeguro(file);
     }
 
     throw error;
