@@ -11,6 +11,7 @@
 
   let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
   let receitas = JSON.parse(localStorage.getItem('receitas')) || [];
+  const NOTIFICACOES_ADM_OCULTAS_KEY = 'notificacoesAdmOcultas';
 
   function salvarDados() {
     localStorage.setItem('clientes', JSON.stringify(clientes));
@@ -263,6 +264,18 @@
 
   function mensagemAlerta(msg) {
     return `<div class="alert">${escapeHtml(msg)}</div>`;
+  }
+
+  function carregarNotificacoesAdmOcultas() {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(NOTIFICACOES_ADM_OCULTAS_KEY)) || []);
+    } catch (error) {
+      return new Set();
+    }
+  }
+
+  function salvarNotificacoesAdmOcultas(ids) {
+    localStorage.setItem(NOTIFICACOES_ADM_OCULTAS_KEY, JSON.stringify([...ids]));
   }
 
   // =========================
@@ -638,10 +651,12 @@
 
         <div class="upload-group">
           <label>Upload da Receita (PDF, JPG, PNG)</label>
-          <div class="upload-guide">Anexe a receita digitalizada ou uma foto do receituário.</div>
+          <div class="upload-guide">Anexe a receita digitalizada ou uma foto do receituario. O sistema recusara arquivos que nao parecam receita medica.</div>
           <label class="file-upload-button" for="arquivoReceitaCliente" id="buttonArquivoReceitaCliente" data-default-text="Selecionar arquivo">Selecionar arquivo</label>
           <input type="file" id="arquivoReceitaCliente" accept=".pdf,.jpg,.jpeg,.png" data-button-id="buttonArquivoReceitaCliente" onchange="previewUpload('arquivoReceitaCliente','previewArquivoReceitaCliente')">
           <div id="previewArquivoReceitaCliente" class="file-preview"></div>
+          <button class="secondary" onclick="analisarReceitaCliente()">Analisar Receita</button>
+          <div id="resultadoAnaliseReceitaCliente"></div>
         </div>
 
         <button class="primary" onclick="cadastrarMinhaReceita()">Cadastrar Receita</button>
@@ -650,6 +665,105 @@
         <div id="msgCadastroMinhaReceita"></div>
       </div>
     `;
+  }
+
+  function formatarMedicamentoAnalise(medicamento) {
+    return medicamento.medicamento_programa ||
+      `${medicamento.nome_lido || ''} ${medicamento.dose_lida || ''}`.trim();
+  }
+
+  function renderizarResultadoAnalise(dados) {
+    const medicamentos = dados.medicamentos || [];
+
+    if (medicamentos.length === 0) {
+      return mensagemAlerta('A analise nao conseguiu identificar medicamentos na receita. Confira se a foto esta legivel.');
+    }
+
+    const itens = medicamentos.map((medicamento) => {
+      const nome = formatarMedicamentoAnalise(medicamento);
+      const status = medicamento.farmacia_popular
+        ? `Farmacia Popular - ${escapeHtml(medicamento.indicacao_programa || 'programa')}`
+        : 'Fora da lista do Farmacia Popular';
+      const confianca = Math.round(Number(medicamento.confianca || 0) * 100);
+
+      return `
+        <div class="item-box">
+          <h3>${escapeHtml(nome)} ${medicamento.farmacia_popular ? '<span class="badge badge-ok">Programa</span>' : '<span class="badge badge-alerta">Revisar</span>'}</h3>
+          <p><strong>Status:</strong> ${status}</p>
+          <p><strong>Lido na receita:</strong> ${escapeHtml(`${medicamento.nome_lido || ''} ${medicamento.dose_lida || ''}`.trim() || '-')}</p>
+          <p><strong>Confianca:</strong> ${confianca}%</p>
+          ${medicamento.posologia ? `<p><strong>Posologia:</strong> ${escapeHtml(medicamento.posologia)}</p>` : ''}
+          ${medicamento.observacoes ? `<p><strong>Observacoes:</strong> ${escapeHtml(medicamento.observacoes)}</p>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    return `
+      ${mensagemSucesso('Analise concluida. Revise os medicamentos antes de cadastrar.')}
+      ${itens}
+    `;
+  }
+
+  function preencherMedicamentosFarmaciaPopular(dados) {
+    const encontrados = dados.medicamentos_farmacia_popular || [];
+    if (encontrados.length === 0) return false;
+
+    const nomes = [...new Set(encontrados.map(formatarMedicamentoAnalise).filter(Boolean))];
+    const campoMedicamento = document.getElementById('medicamentoCliente');
+    const campoObservacoes = document.getElementById('obsReceitaCliente');
+
+    if (campoMedicamento && nomes.length > 0) {
+      campoMedicamento.value = nomes.join('; ');
+    }
+
+    if (campoObservacoes) {
+      const resumo = encontrados
+        .map((medicamento) => `- ${formatarMedicamentoAnalise(medicamento)} (${medicamento.indicacao_programa || 'Farmacia Popular'})`)
+        .join('\n');
+      const bloco = `Medicamentos do Farmacia Popular identificados pela analise:\n${resumo}`;
+
+      if (!campoObservacoes.value.includes('Medicamentos do Farmacia Popular identificados pela analise')) {
+        campoObservacoes.value = [campoObservacoes.value.trim(), bloco].filter(Boolean).join('\n\n');
+      }
+    }
+
+    return true;
+  }
+
+  async function analisarReceitaCliente() {
+    const input = document.getElementById('arquivoReceitaCliente');
+    const resultadoBox = document.getElementById('resultadoAnaliseReceitaCliente');
+    const arquivo = input?.files?.[0];
+
+    if (!resultadoBox) return;
+
+    if (!arquivo) {
+      resultadoBox.innerHTML = mensagemErro('Selecione a foto ou PDF da receita antes de analisar.');
+      return;
+    }
+
+    resultadoBox.innerHTML = mensagemAlerta('Analisando receita. Se a IA estiver sem credito, o OCR local sera usado.');
+
+    try {
+      const form = new FormData();
+      form.append('fotoReceita', arquivo);
+
+      const dados = await apiJson('/receitas/analisar', {
+        method: 'POST',
+        body: form
+      });
+
+      const preencheu = preencherMedicamentosFarmaciaPopular(dados);
+      resultadoBox.innerHTML = renderizarResultadoAnalise(dados);
+
+      if (!preencheu) {
+        resultadoBox.innerHTML =
+          mensagemAlerta('A IA leu a receita, mas nao encontrou medicamentos da lista do Farmacia Popular.') +
+          resultadoBox.innerHTML;
+      }
+    } catch (error) {
+      resultadoBox.innerHTML = mensagemErro(error.message);
+    }
   }
 
   async function cadastrarMinhaReceita() {
@@ -723,7 +837,7 @@
 
         <div class="upload-group">
           <label>Upload da Receita</label>
-          <div class="upload-guide">Envie apenas se quiser substituir o arquivo atual.</div>
+          <div class="upload-guide">Envie apenas se quiser substituir o arquivo atual. O sistema recusara arquivos que nao parecam receita medica.</div>
           <label class="file-upload-button" for="editArquivoReceitaCliente" id="buttonEditArquivoReceitaCliente" data-default-text="Selecionar novo arquivo">Selecionar novo arquivo</label>
           <input type="file" id="editArquivoReceitaCliente" accept=".pdf,.jpg,.jpeg,.png" data-button-id="buttonEditArquivoReceitaCliente" onchange="previewUpload('editArquivoReceitaCliente','previewEditArquivoReceitaCliente')">
           <div id="previewEditArquivoReceitaCliente" class="file-preview">${arquivoReceita ? `Arquivo atual: ${arquivoReceita.nome}` : 'Nenhum arquivo carregado'}</div>
@@ -863,7 +977,7 @@
 
         <div class="upload-group">
           <label>Upload de Documento (CPF, RG ou CNH)</label>
-          <div class="upload-guide">Selecione um arquivo PDF, JPG ou PNG. Será salvo com o cliente.</div>
+          <div class="upload-guide">Selecione PDF, JPG ou PNG. O sistema aceita apenas documentos de identificacao.</div>
           <label class="file-upload-button" for="documentoCliente" id="buttonDocumentoCliente" data-default-text="Selecionar documento">Selecionar documento</label>
           <input type="file" id="documentoCliente" accept=".pdf,.jpg,.jpeg,.png" data-button-id="buttonDocumentoCliente" onchange="previewUpload('documentoCliente','previewDocumentoCliente')">
           <div id="previewDocumentoCliente" class="file-preview"></div>
@@ -996,7 +1110,7 @@
 
         <div class="upload-group">
           <label>Upload de Documento Atual</label>
-          <div class="upload-guide">Envie apenas se quiser substituir o documento atual.</div>
+          <div class="upload-guide">Envie apenas se quiser substituir o documento atual. O sistema aceita apenas documentos de identificacao.</div>
           <label class="file-upload-button" for="editDocumentoCliente" id="buttonEditDocumentoCliente" data-default-text="Selecionar novo documento">Selecionar novo documento</label>
           <input type="file" id="editDocumentoCliente" accept=".pdf,.jpg,.jpeg,.png" data-button-id="buttonEditDocumentoCliente" onchange="previewUpload('editDocumentoCliente','previewEditDocumentoCliente')">
           <div id="previewEditDocumentoCliente" class="file-preview">${documento ? `Arquivo atual: ${documento.nome}` : 'Nenhum documento carregado'}</div>
@@ -1105,7 +1219,7 @@
 
         <div class="upload-group">
           <label>Upload da Receita (PDF, JPG, PNG)</label>
-          <div class="upload-guide">Anexe aqui a receita digitalizada ou foto do receituário.</div>
+          <div class="upload-guide">Anexe aqui a receita digitalizada ou foto do receituario. O sistema recusara arquivos que nao parecam receita medica.</div>
           <label class="file-upload-button" for="arquivoReceitaAdm" id="buttonArquivoReceitaAdm" data-default-text="Selecionar arquivo">Selecionar arquivo</label>
           <input type="file" id="arquivoReceitaAdm" accept=".pdf,.jpg,.jpeg,.png" data-button-id="buttonArquivoReceitaAdm" onchange="previewUpload('arquivoReceitaAdm','previewArquivoReceitaAdm')">
           <div id="previewArquivoReceitaAdm" class="file-preview"></div>
@@ -1244,7 +1358,7 @@
 
         <div class="upload-group">
           <label>Upload de Receita Atual</label>
-          <div class="upload-guide">Envie apenas se quiser substituir o arquivo de receita atual.</div>
+          <div class="upload-guide">Envie apenas se quiser substituir o arquivo de receita atual. O sistema recusara arquivos que nao parecam receita medica.</div>
           <label class="file-upload-button" for="editArquivoReceitaAdm" id="buttonEditArquivoReceitaAdm" data-default-text="Selecionar novo arquivo">Selecionar novo arquivo</label>
           <input type="file" id="editArquivoReceitaAdm" accept=".pdf,.jpg,.jpeg,.png" data-button-id="buttonEditArquivoReceitaAdm" onchange="previewUpload('editArquivoReceitaAdm','previewEditArquivoReceitaAdm')">
           <div id="previewEditArquivoReceitaAdm" class="file-preview">${arquivoReceita ? `Arquivo atual: ${arquivoReceita.nome}` : 'Nenhum arquivo carregado'}</div>
@@ -1319,6 +1433,44 @@
   // =========================
   // ADM - NOTIFICAÇÕES GERAIS
   // =========================
+  function gerarNotificacoesAdm() {
+    const notificacoes = [];
+
+    receitas.forEach(r => {
+      const cliente = clientes.find(c => c.id === r.clienteId);
+      const diasValidade = diasRestantes(r.validade);
+      const diasRetirada = diasRestantes(r.proximaRetirada);
+      const nomeCliente = escapeHtml(cliente?.nome || 'Cliente');
+      const medicamento = escapeHtml(r.medicamento);
+
+      if (diasValidade < 0) {
+        notificacoes.push({
+          id: `validade-vencida:${r.id}:${r.validade}`,
+          html: `<div class="alert">A receita de <strong>${nomeCliente}</strong> para <strong>${medicamento}</strong> esta vencida.</div>`
+        });
+      } else if (diasValidade <= 5) {
+        notificacoes.push({
+          id: `validade-vencendo:${r.id}:${r.validade}`,
+          html: `<div class="alert">A receita de <strong>${nomeCliente}</strong> para <strong>${medicamento}</strong> vence em <strong>${diasValidade}</strong> dia(s).</div>`
+        });
+      }
+
+      if (diasRetirada === 0) {
+        notificacoes.push({
+          id: `retirada-hoje:${r.id}:${r.proximaRetirada}`,
+          html: `<div class="success">Hoje e o dia de retirada do medicamento <strong>${medicamento}</strong> para <strong>${nomeCliente}</strong>.</div>`
+        });
+      } else if (diasRetirada > 0 && diasRetirada <= 3) {
+        notificacoes.push({
+          id: `retirada-proxima:${r.id}:${r.proximaRetirada}`,
+          html: `<div class="alert">Faltam <strong>${diasRetirada}</strong> dia(s) para <strong>${nomeCliente}</strong> retirar o medicamento <strong>${medicamento}</strong>.</div>`
+        });
+      }
+    });
+
+    return notificacoes;
+  }
+
   async function telaNotificacoesAdm() {
     await sincronizarDadosBackend();
 
@@ -1326,6 +1478,8 @@
       <div class="card">
         <h2>🔔 Notificações Gerais</h2>
         <button class="primary" onclick="telaNotificacoesAdm()">Verificar Novamente</button>
+        <button class="danger" onclick="excluirHistoricoNotificacoesAdm()">Excluir Historico</button>
+        <div id="msgNotificacoesAdm"></div>
         <div id="listaNotificacoesAdm"></div>
       </div>
 
@@ -1350,6 +1504,7 @@
         <textarea id="smsMensagem" rows="4" maxlength="480" placeholder="Digite a mensagem que será enviada por SMS"></textarea>
         <button class="primary" onclick="enviarSmsAdm()">Enviar SMS</button>
         <button class="secondary" onclick="carregarHistoricoSms()">Atualizar Histórico</button>
+        <button class="danger" onclick="excluirHistoricoSms()">Excluir Histórico</button>
         <div id="msgSmsAdm"></div>
         <div id="statusSmsAdm"></div>
         <div id="historicoSmsAdm"></div>
@@ -1357,9 +1512,14 @@
     `;
 
     const lista = document.getElementById('listaNotificacoesAdm');
-    let html = '';
+    const ocultas = carregarNotificacoesAdmOcultas();
+    let html = gerarNotificacoesAdm()
+      .filter(item => !ocultas.has(item.id))
+      .map(item => item.html)
+      .join('');
 
-    receitas.forEach(r => {
+    // Bloco antigo preservado, mas desativado pelo filtro de historico.
+    if (false) receitas.forEach(r => {
       const cliente = clientes.find(c => c.id === r.clienteId);
       const diasValidade = diasRestantes(r.validade);
       const diasRetirada = diasRestantes(r.proximaRetirada);
@@ -1386,6 +1546,34 @@
     lista.innerHTML = html;
     montarSelectSmsClientes();
     atualizarPainelSmsAdm();
+  }
+
+  async function excluirHistoricoNotificacoesAdm() {
+    if (!confirm('Deseja realmente excluir o historico de notificacoes?')) return;
+
+    try {
+      const resultado = await apiJson('/notificacoes/historico', {
+        method: 'DELETE'
+      });
+
+      const ocultas = carregarNotificacoesAdmOcultas();
+      gerarNotificacoesAdm().forEach(item => ocultas.add(item.id));
+      salvarNotificacoesAdmOcultas(ocultas);
+
+      await telaNotificacoesAdm();
+
+      const msgBox = document.getElementById('msgNotificacoesAdm');
+      if (msgBox) {
+        msgBox.innerHTML = mensagemSucesso(resultado.mensagem || 'Historico de notificacoes excluido com sucesso.');
+      }
+    } catch (error) {
+      const msgBox = document.getElementById('msgNotificacoesAdm');
+      if (msgBox) {
+        msgBox.innerHTML = mensagemErro(error.message);
+      } else {
+        alert(error.message);
+      }
+    }
   }
 
   function montarSelectSmsClientes() {
@@ -1426,7 +1614,7 @@
       if (status) {
         status.innerHTML = config.configurado
           ? mensagemSucesso('SMS configurado e pronto para envio.')
-          : mensagemAlerta('SMS ainda não configurado. Preencha as chaves Twilio no backend/.env.');
+          : mensagemAlerta('SMS ainda nao configurado. Confira o backend/.env.');
       }
 
       await carregarHistoricoSms();
@@ -1460,6 +1648,28 @@
       `).join('');
     } catch (error) {
       historicoBox.innerHTML = mensagemErro(error.message);
+    }
+  }
+
+  async function excluirHistoricoSms() {
+    if (!confirm('Deseja realmente excluir todo o historico de SMS?')) return;
+
+    const msgBox = document.getElementById('msgSmsAdm');
+
+    try {
+      const resultado = await apiJson('/sms/historico', {
+        method: 'DELETE'
+      });
+
+      if (msgBox) {
+        msgBox.innerHTML = mensagemSucesso(resultado.mensagem || 'Historico excluido com sucesso.');
+      }
+
+      await carregarHistoricoSms();
+    } catch (error) {
+      if (msgBox) {
+        msgBox.innerHTML = mensagemErro(error.message);
+      }
     }
   }
 

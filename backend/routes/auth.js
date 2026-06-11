@@ -3,6 +3,10 @@ const router = express.Router();
 const db = require('../database');
 const bcrypt = require('bcrypt');
 const upload = require('../middlewares/upload');
+const {
+  excluirArquivoUpload,
+  validarUploadDocumento
+} = require('../services/uploadValidador');
 
 function texto(valor) {
   return String(valor || '').trim();
@@ -138,12 +142,13 @@ router.post('/cadastro', async (req, res) => {
 router.post(
   '/cadastro-documento',
   upload.single('documento'),
-  (req, res) => {
+  async (req, res) => {
     try {
       const { cpf } = req.body;
       const cpfLimpo = texto(cpf);
 
       if (!cpfLimpo) {
+        excluirArquivoUpload(req.file);
         return res.status(400).json({
           success: false,
           erro: 'CPF é obrigatório para vincular o documento.'
@@ -157,6 +162,8 @@ router.post(
         });
       }
 
+      await validarUploadDocumento(req.file);
+
       const documentoFilename = req.file.filename;
 
       db.run(
@@ -164,6 +171,7 @@ router.post(
         [documentoFilename, cpfLimpo],
         function (err) {
           if (err) {
+            excluirArquivoUpload(req.file);
             return res.status(500).json({
               success: false,
               erro: err.message
@@ -171,6 +179,7 @@ router.post(
           }
 
           if (this.changes === 0) {
+            excluirArquivoUpload(req.file);
             return res.status(404).json({
               success: false,
               erro: 'Cliente não encontrado para este CPF.'
@@ -184,7 +193,8 @@ router.post(
         }
       );
     } catch (error) {
-      return res.status(500).json({
+      excluirArquivoUpload(req.file);
+      return res.status(error.statusCode || 500).json({
         success: false,
         erro: error.message
       });

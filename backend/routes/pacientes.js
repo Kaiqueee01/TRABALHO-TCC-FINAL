@@ -3,6 +3,10 @@ const router = express.Router();
 const db = require('../database');
 const bcrypt = require('bcrypt');
 const upload = require('../middlewares/upload');
+const {
+  excluirArquivoUpload,
+  validarUploadDocumento
+} = require('../services/uploadValidador');
 
 function texto(valor) {
   return String(valor || '').trim();
@@ -61,10 +65,15 @@ router.post('/clientes', upload.single('documento'), async (req, res) => {
     const documento = req.file ? req.file.filename : null;
 
     if (!nome || !cpf || !telefone || !endereco || !nascimento || !senha) {
+      excluirArquivoUpload(req.file);
       return res.status(400).json({
         success: false,
         mensagem: 'Preencha nome, CPF, telefone, endereço, nascimento e senha.'
       });
+    }
+
+    if (req.file) {
+      await validarUploadDocumento(req.file);
     }
 
     const senhaHash = await bcrypt.hash(senha, 10);
@@ -78,6 +87,8 @@ router.post('/clientes', upload.single('documento'), async (req, res) => {
       [nome, cpf, telefone, endereco, nascimento, senhaHash, documento],
       function (err) {
         if (err) {
+          excluirArquivoUpload(req.file);
+
           if (err.code === 'SQLITE_CONSTRAINT') {
             return res.status(409).json({
               success: false,
@@ -106,9 +117,10 @@ router.post('/clientes', upload.single('documento'), async (req, res) => {
       }
     );
   } catch (error) {
-    res.status(500).json({
+    excluirArquivoUpload(req.file);
+    res.status(error.statusCode || 500).json({
       success: false,
-      mensagem: 'Erro ao cadastrar cliente.'
+      mensagem: error.message || 'Erro ao cadastrar cliente.'
     });
   }
 });
@@ -135,6 +147,7 @@ router.put('/clientes/:id', upload.single('documento'), async (req, res) => {
     const nascimento = texto(nascimentoRecebido);
 
     if (!nome || !cpf || !telefone || !endereco) {
+      excluirArquivoUpload(req.file);
       return res.status(400).json({
         success: false,
         mensagem: 'Preencha nome, CPF, telefone e endereço.'
@@ -143,6 +156,10 @@ router.put('/clientes/:id', upload.single('documento'), async (req, res) => {
 
     let senhaHash = null;
     const documento = req.file ? req.file.filename : null;
+
+    if (req.file) {
+      await validarUploadDocumento(req.file);
+    }
 
     if (senha) {
       senhaHash = await bcrypt.hash(senha, 10);
@@ -175,6 +192,8 @@ router.put('/clientes/:id', upload.single('documento'), async (req, res) => {
       ],
       function (err) {
         if (err) {
+          excluirArquivoUpload(req.file);
+
           if (err.code === 'SQLITE_CONSTRAINT') {
             return res.status(409).json({
               success: false,
@@ -189,6 +208,7 @@ router.put('/clientes/:id', upload.single('documento'), async (req, res) => {
         }
 
         if (this.changes === 0) {
+          excluirArquivoUpload(req.file);
           return res.status(404).json({
             success: false,
             mensagem: 'Cliente não encontrado.'
@@ -201,9 +221,10 @@ router.put('/clientes/:id', upload.single('documento'), async (req, res) => {
 
   } catch (error) {
 
-    res.status(500).json({
+    excluirArquivoUpload(req.file);
+    res.status(error.statusCode || 500).json({
       success: false,
-      mensagem: 'Erro ao atualizar cliente.'
+      mensagem: error.message || 'Erro ao atualizar cliente.'
     });
   }
 });

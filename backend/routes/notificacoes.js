@@ -22,4 +22,21 @@ router.get('/notificacoes', (req, res) => {
   });
 });
 
+router.delete('/notificacoes/historico', (req, res) => {
+  db.run(`DELETE FROM notificacoes`, [], function (err) {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        mensagem: 'Erro ao excluir historico de notificacoes.'
+      });
+    }
+
+    res.json({
+      success: true,
+      mensagem: 'Historico de notificacoes excluido com sucesso.',
+      removidos: this.changes || 0
+    });
+  });
+});
+
 module.exports = router;

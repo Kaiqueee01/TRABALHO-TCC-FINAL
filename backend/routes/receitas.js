@@ -1,8 +1,14 @@
 const express = require('express');
+const fs = require('fs');
 const router = express.Router();
 
 const db = require('../database');
 const upload = require('../middlewares/upload');
+const { analisarReceitaComIa } = require('../services/receitaAi');
+const {
+  excluirArquivoUpload,
+  validarUploadReceita
+} = require('../services/uploadValidador');
 
 function texto(valor) {
   return String(valor || '').trim();
@@ -51,18 +57,46 @@ router.get('/receitas', (req, res) => {
   });
 });
 
+// Analisar receita com IA para preencher medicamentos automaticamente
+router.post(
+  '/receitas/analisar',
+  upload.single('fotoReceita'),
+  async (req, res) => {
+    try {
+      await validarUploadReceita(req.file);
+      const resultado = await analisarReceitaComIa(req.file);
+      return res.json(resultado);
+    } catch (error) {
+      return res.status(error.statusCode || 500).json({
+        success: false,
+        mensagem: error.message || 'Erro ao analisar receita com IA.'
+      });
+    } finally {
+      if (req.file && req.file.path) {
+        fs.promises.unlink(req.file.path).catch(() => {});
+      }
+    }
+  }
+);
+
 // Cadastrar receita
 router.post(
   '/receitas',
   upload.single('fotoReceita'),
-  (req, res) => {
+  async (req, res) => {
+    try {
     const resultado = validarReceita(req.body);
 
     if (resultado.erro) {
+      excluirArquivoUpload(req.file);
       return res.status(400).json({
         success: false,
         mensagem: resultado.erro
       });
+    }
+
+    if (req.file) {
+      await validarUploadReceita(req.file);
     }
 
     const {
@@ -84,6 +118,7 @@ router.post(
       [cliente_id, medicamento, data_receita, validade, proxima_retirada, observacoes, imagem_receita],
       function (err) {
         if (err) {
+          excluirArquivoUpload(req.file);
           return res.status(500).json({
             success: false,
             mensagem: 'Erro ao cadastrar receita.'
@@ -105,6 +140,13 @@ router.post(
         });
       }
     );
+    } catch (error) {
+      excluirArquivoUpload(req.file);
+      return res.status(error.statusCode || 500).json({
+        success: false,
+        mensagem: error.message || 'Erro ao cadastrar receita.'
+      });
+    }
   }
 );
 
@@ -112,17 +154,22 @@ router.post(
 router.put(
   '/receitas/:id',
   upload.single('fotoReceita'),
-  (req, res) => {
+  async (req, res) => {
 
     try {
 
       const resultado = validarReceita(req.body);
 
       if (resultado.erro) {
+        excluirArquivoUpload(req.file);
         return res.status(400).json({
           success: false,
           mensagem: resultado.erro
         });
+      }
+
+      if (req.file) {
+        await validarUploadReceita(req.file);
       }
 
       const {
@@ -167,6 +214,7 @@ router.put(
         function (err) {
 
           if (err) {
+            excluirArquivoUpload(req.file);
             return res.status(500).json({
               success: false,
               mensagem: err.message
@@ -175,6 +223,7 @@ router.put(
 
           // Verifica se encontrou o registro
           if (this.changes === 0) {
+            excluirArquivoUpload(req.file);
             return res.status(404).json({
               success: false,
               mensagem: 'Receita não encontrada'
@@ -190,9 +239,10 @@ router.put(
 
     } catch (error) {
 
-      res.status(500).json({
+      excluirArquivoUpload(req.file);
+      res.status(error.statusCode || 500).json({
         success: false,
-        mensagem: error.message
+        mensagem: error.message || 'Erro ao atualizar receita.'
       });
 
     }
