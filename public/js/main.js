@@ -12,6 +12,7 @@
 
   let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
   let receitas = JSON.parse(localStorage.getItem('receitas')) || [];
+  let timerAnaliseReceita = null;
   const NOTIFICACOES_ADM_OCULTAS_KEY = 'notificacoesAdmOcultas';
 
   // Salva clientes e receitas no navegador.
@@ -121,7 +122,81 @@
       if (button) {
         button.textContent = file ? `Selecionado: ${file.name}` : (defaultText || button.textContent);
       }
+      limparCampoObrigatorio(inputId);
     }
+  }
+
+  function elementoVisualArquivo(input) {
+    if (!input) return null;
+    return (document.querySelector ? document.querySelector(`label[for="${input.id}"]`) : null) ||
+      (input.dataset?.buttonId ? document.getElementById(input.dataset.buttonId) : null);
+  }
+
+  function limparCampoObrigatorio(id) {
+    const campo = document.getElementById(id);
+    if (!campo) return;
+
+    campo.classList.remove('campo-obrigatorio-faltando');
+
+    if (campo.type === 'file') {
+      const visualArquivo = elementoVisualArquivo(campo);
+      visualArquivo?.classList.remove('campo-obrigatorio-faltando');
+      visualArquivo?.closest?.('.upload-group')?.classList.remove('campo-obrigatorio-faltando');
+    }
+  }
+
+  function marcarCampoObrigatorio(id) {
+    const campo = document.getElementById(id);
+    if (!campo) return;
+
+    if (campo.type === 'file') {
+      const visualArquivo = elementoVisualArquivo(campo);
+      visualArquivo?.classList.add('campo-obrigatorio-faltando');
+      visualArquivo?.closest?.('.upload-group')?.classList.add('campo-obrigatorio-faltando');
+      return;
+    }
+
+    campo.classList.add('campo-obrigatorio-faltando');
+  }
+
+  function ativarLimpezaCampoObrigatorio(id) {
+    const campo = document.getElementById(id);
+    if (!campo || campo.dataset.validacaoObrigatoriaAtiva) return;
+
+    campo.dataset.validacaoObrigatoriaAtiva = '1';
+    const evento = campo.type === 'file' || campo.tagName === 'SELECT' ? 'change' : 'input';
+    campo.addEventListener(evento, () => limparCampoObrigatorio(id));
+  }
+
+  function validarCamposObrigatorios(campos) {
+    let primeiroCampoFaltando = null;
+
+    campos.forEach(({ id, arquivo = false }) => {
+      const campo = document.getElementById(id);
+      ativarLimpezaCampoObrigatorio(id);
+      limparCampoObrigatorio(id);
+
+      const faltando = arquivo
+        ? !campo?.files?.[0]
+        : !String(campo?.value || '').trim();
+
+      if (faltando) {
+        marcarCampoObrigatorio(id);
+        primeiroCampoFaltando = primeiroCampoFaltando || campo;
+      }
+    });
+
+    if (primeiroCampoFaltando) {
+      const alvo = primeiroCampoFaltando.type === 'file'
+        ? elementoVisualArquivo(primeiroCampoFaltando)
+        : primeiroCampoFaltando;
+
+      alvo?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (primeiroCampoFaltando.type !== 'file') primeiroCampoFaltando.focus();
+      return false;
+    }
+
+    return true;
   }
 
   // Cadastra o cliente e envia o documento.
@@ -137,7 +212,15 @@
     const msgBox = document.getElementById('msgCadastroCliente');
     if (msgBox) msgBox.innerHTML = '';
 
-    if (!nome || !cpf || !telefone || !endereco || !nascimento || !senha || !arquivo) {
+    if (!validarCamposObrigatorios([
+      { id: 'cadNome' },
+      { id: 'cadCpf' },
+      { id: 'cadTelefone' },
+      { id: 'cadEndereco' },
+      { id: 'cadNascimento' },
+      { id: 'cadSenha' },
+      { id: 'cadDocumento', arquivo: true }
+    ])) {
       if (msgBox) msgBox.innerHTML = mensagemErro('Preencha todos os campos e anexe o documento.');
       return;
     }
@@ -312,7 +395,10 @@
     const usuario = document.getElementById('usuarioAdm').value.trim();
     const senha = document.getElementById('senhaAdm').value.trim();
 
-    if (!usuario || !senha) {
+    if (!validarCamposObrigatorios([
+      { id: 'usuarioAdm' },
+      { id: 'senhaAdm' }
+    ])) {
       document.getElementById('msgLoginAdm').innerHTML = mensagemErro("Digite usuário e senha.");
       return;
     }
@@ -345,7 +431,10 @@
     const cpf = document.getElementById('loginCpfCliente').value.trim();
     const senha = document.getElementById('loginSenhaCliente').value.trim();
 
-    if (!cpf || !senha) {
+    if (!validarCamposObrigatorios([
+      { id: 'loginCpfCliente' },
+      { id: 'loginSenhaCliente' }
+    ])) {
       document.getElementById('msgLoginCliente').innerHTML = mensagemErro("Digite CPF e senha para acessar.");
       return;
     }
@@ -439,31 +528,30 @@
 
       document.getElementById('conteudo').innerHTML = `
         <div class="stats">
-          <div class="stat-card">
-            <h4>Total de Clientes</h4>
+          <button class="stat-card stat-action stat-clientes" onclick="telaCadastroClienteAdm()" aria-label="Abrir gerenciamento de clientes">
+            <span class="stat-icon">👥</span>
+            <h4>Clientes cadastrados</h4>
             <div class="number">${totalClientes}</div>
-          </div>
-          <div class="stat-card">
-            <h4>Total de Receitas</h4>
+            <span class="stat-detail">Cadastro e dados dos pacientes</span>
+          </button>
+          <button class="stat-card stat-action stat-receitas" onclick="telaConsultaReceitasAdm('todas')" aria-label="Abrir lista de todas as receitas">
+            <span class="stat-icon">📄</span>
+            <h4>Receitas cadastradas</h4>
             <div class="number">${totalReceitas}</div>
-          </div>
-          <div class="stat-card">
-            <h4>Receitas Próximas do Vencimento</h4>
+            <span class="stat-detail">Lista completa de receitas</span>
+          </button>
+          <button class="stat-card stat-action stat-alerta" onclick="telaConsultaReceitasAdm('vencendo')" aria-label="Abrir lista de receitas próximas do vencimento">
+            <span class="stat-icon">⏳</span>
+            <h4>Próximas do vencimento</h4>
             <div class="number">${receitasVencendo}</div>
-          </div>
-          <div class="stat-card">
-            <h4>Receitas Vencidas</h4>
+            <span class="stat-detail">Validade em até 5 dias</span>
+          </button>
+          <button class="stat-card stat-action stat-vencidas" onclick="telaConsultaReceitasAdm('vencidas')" aria-label="Abrir lista de receitas vencidas">
+            <span class="stat-icon">⚠️</span>
+            <h4>Receitas vencidas</h4>
             <div class="number">${receitasVencidas}</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>📊 Dashboard Administrativo</h2>
-          <p>Bem-vindo ao painel administrativo do <strong>SISTEMA INTELIGENTE DE MONITORAMENTO DE RECEITAS</strong>.</p>
-          <p>Este sistema foi projetado para monitorar receitas médicas, acompanhar prazos de retirada de medicamentos e apoiar a gestão de pacientes em programas públicos de assistência farmacêutica.</p>
-          <div class="footer-note">
-            Sistema desenvolvido em versão acadêmica avançada para TCC de Análise e Desenvolvimento de Sistemas.
-          </div>
+            <span class="stat-detail">Validade expirada</span>
+          </button>
         </div>
       `;
     }
@@ -550,8 +638,14 @@
     const nascimento = document.getElementById('editNascimentoCliente').value.trim();
     const endereco = document.getElementById('editEnderecoCliente').value.trim();
 
-    if (!nome || !cpf || !telefone || !endereco) {
-      document.getElementById('msgMeuPerfil').innerHTML = mensagemErro("Preencha todos os campos obrigatórios: Nome, CPF, Telefone e Endereço.");
+    if (!validarCamposObrigatorios([
+      { id: 'editNomeCliente' },
+      { id: 'editCpfCliente' },
+      { id: 'editTelefoneCliente' },
+      { id: 'editNascimentoCliente' },
+      { id: 'editEnderecoCliente' }
+    ])) {
+      document.getElementById('msgMeuPerfil').innerHTML = mensagemErro("Preencha todos os campos obrigatórios: Nome, CPF, Telefone, Nascimento e Endereço.");
       return;
     }
 
@@ -661,7 +755,7 @@
           <label class="file-upload-button" for="arquivoReceitaCliente" id="buttonArquivoReceitaCliente" data-default-text="Selecionar arquivo">Selecionar arquivo</label>
           <input type="file" id="arquivoReceitaCliente" accept=".pdf,.jpg,.jpeg,.png" data-button-id="buttonArquivoReceitaCliente" onchange="previewUpload('arquivoReceitaCliente','previewArquivoReceitaCliente')">
           <div id="previewArquivoReceitaCliente" class="file-preview"></div>
-          <button class="secondary" onclick="analisarReceitaCliente()">Analisar Receita</button>
+          <button class="secondary" id="btnAnalisarReceitaCliente" onclick="analisarReceitaCliente()">Analisar Receita</button>
           <div id="resultadoAnaliseReceitaCliente"></div>
         </div>
 
@@ -739,6 +833,72 @@
     return true;
   }
 
+  function atualizarProgressoAnaliseReceita(valor) {
+    const progresso = Math.max(0, Math.min(100, valor));
+    const barra = document.getElementById('barraAnaliseReceita');
+    const porcentagem = document.getElementById('porcentagemAnaliseReceita');
+
+    if (barra) barra.style.width = `${progresso}%`;
+    if (porcentagem) porcentagem.textContent = `${progresso}%`;
+  }
+
+  function iniciarCarregamentoAnaliseReceita(resultadoBox) {
+    const botao = document.getElementById('btnAnalisarReceitaCliente');
+    let progresso = 8;
+
+    if (timerAnaliseReceita) {
+      clearInterval(timerAnaliseReceita);
+      timerAnaliseReceita = null;
+    }
+
+    if (botao) {
+      botao.disabled = true;
+      botao.textContent = 'Analisando...';
+      botao.classList.add('is-loading');
+    }
+
+    resultadoBox.innerHTML = `
+      <div class="analysis-loading" role="status" aria-live="polite">
+        <div class="analysis-loading-header">
+          <span class="analysis-spinner"></span>
+          <div class="analysis-loading-text">
+            <strong>Analisando receita</strong>
+            <span>Verificando o arquivo enviado. Aguarde.</span>
+          </div>
+          <strong class="analysis-percent" id="porcentagemAnaliseReceita">${progresso}%</strong>
+        </div>
+        <div class="analysis-progress" aria-hidden="true">
+          <div class="analysis-progress-bar" id="barraAnaliseReceita" style="width: ${progresso}%"></div>
+        </div>
+      </div>
+    `;
+
+    timerAnaliseReceita = setInterval(() => {
+      const incremento = Math.floor(Math.random() * 7) + 3;
+      progresso = Math.min(95, progresso + incremento);
+      atualizarProgressoAnaliseReceita(progresso);
+    }, 700);
+  }
+
+  function finalizarCarregamentoAnaliseReceita(concluiu = false) {
+    const botao = document.getElementById('btnAnalisarReceitaCliente');
+
+    if (timerAnaliseReceita) {
+      clearInterval(timerAnaliseReceita);
+      timerAnaliseReceita = null;
+    }
+
+    if (concluiu) {
+      atualizarProgressoAnaliseReceita(100);
+    }
+
+    if (botao) {
+      botao.disabled = false;
+      botao.textContent = 'Analisar Receita';
+      botao.classList.remove('is-loading');
+    }
+  }
+
   // Envia a receita para IA ou OCR local analisar.
   async function analisarReceitaCliente() {
     const input = document.getElementById('arquivoReceitaCliente');
@@ -747,12 +907,14 @@
 
     if (!resultadoBox) return;
 
-    if (!arquivo) {
+    if (!validarCamposObrigatorios([
+      { id: 'arquivoReceitaCliente', arquivo: true }
+    ])) {
       resultadoBox.innerHTML = mensagemErro('Selecione a foto ou PDF da receita antes de analisar.');
       return;
     }
 
-    resultadoBox.innerHTML = mensagemAlerta('Analisando receita. Aguarde enquanto verificamos as informações do arquivo.');
+    iniciarCarregamentoAnaliseReceita(resultadoBox);
 
     try {
       const form = new FormData();
@@ -764,6 +926,7 @@
       });
 
       const preencheu = preencherMedicamentosFarmaciaPopular(dados);
+      finalizarCarregamentoAnaliseReceita(true);
       resultadoBox.innerHTML = renderizarResultadoAnalise(dados);
 
       if (!preencheu) {
@@ -772,6 +935,7 @@
           resultadoBox.innerHTML;
       }
     } catch (error) {
+      finalizarCarregamentoAnaliseReceita(false);
       resultadoBox.innerHTML = mensagemErro(mensagemFormalAnaliseReceita(error));
     }
   }
@@ -785,7 +949,12 @@
     const observacoes = document.getElementById('obsReceitaCliente').value.trim();
     const arquivo = document.getElementById('arquivoReceitaCliente').files?.[0];
 
-    if (!medicamento || !dataReceita || !validade || !proximaRetirada) {
+    if (!validarCamposObrigatorios([
+      { id: 'medicamentoCliente' },
+      { id: 'dataReceitaCliente' },
+      { id: 'validadeReceitaCliente' },
+      { id: 'retiradaReceitaCliente' }
+    ])) {
       document.getElementById('msgCadastroMinhaReceita').innerHTML = mensagemErro("Preencha todos os campos obrigatórios da receita: Medicamento, Data da Receita, Validade e Próxima Retirada.");
       return;
     }
@@ -873,7 +1042,12 @@
     const proximaRetirada = document.getElementById('editRetiradaReceitaCliente').value.trim();
     const observacoes = document.getElementById('editObsReceitaCliente').value.trim();
 
-    if (!medicamento || !dataReceita || !validade || !proximaRetirada) {
+    if (!validarCamposObrigatorios([
+      { id: 'editMedicamentoCliente' },
+      { id: 'editDataReceitaCliente' },
+      { id: 'editValidadeReceitaCliente' },
+      { id: 'editRetiradaReceitaCliente' }
+    ])) {
       document.getElementById('msgEditarMinhaReceita').innerHTML = mensagemErro("Preencha todos os campos obrigatórios da receita.");
       return;
     }
@@ -1023,19 +1197,22 @@
     const senha = document.getElementById('senhaClienteAdm').value;
     const arquivo = document.getElementById('documentoCliente').files?.[0];
 
-    if (!nome || !cpf || !telefone || !nascimento || !endereco || !senha) {
-      document.getElementById('msgClienteAdm').innerHTML = mensagemErro("Preencha todos os campos obrigatórios: Nome, CPF, Telefone, Nascimento, Endereço e Senha.");
+    if (!validarCamposObrigatorios([
+      { id: 'nomeCliente' },
+      { id: 'cpfCliente' },
+      { id: 'telefoneCliente' },
+      { id: 'nascimentoCliente' },
+      { id: 'enderecoCliente' },
+      { id: 'senhaClienteAdm' },
+      { id: 'documentoCliente', arquivo: true }
+    ])) {
+      document.getElementById('msgClienteAdm').innerHTML = mensagemErro("Preencha todos os campos obrigatórios e anexe o documento do cliente.");
       return;
     }
 
     const cpfExistente = clientes.find(c => c.cpf === cpf);
     if (cpfExistente) {
       document.getElementById('msgClienteAdm').innerHTML = mensagemErro("Já existe um cliente cadastrado com este CPF.");
-      return;
-    }
-
-    if (!arquivo) {
-      document.getElementById('msgClienteAdm').innerHTML = mensagemErro("O upload do documento do cliente é obrigatório.");
       return;
     }
 
@@ -1152,8 +1329,14 @@
     const senha = document.getElementById('editSenhaAdm').value;
     const arquivo = document.getElementById('editDocumentoCliente').files?.[0];
 
-    if (!nome || !cpf || !telefone || !endereco) {
-      document.getElementById('msgEditarClienteAdm').innerHTML = mensagemErro("Preencha todos os campos obrigatórios: Nome, CPF, Telefone e Endereço.");
+    if (!validarCamposObrigatorios([
+      { id: 'editNomeAdm' },
+      { id: 'editCpfAdm' },
+      { id: 'editTelefoneAdm' },
+      { id: 'editNascimentoAdm' },
+      { id: 'editEnderecoAdm' }
+    ])) {
+      document.getElementById('msgEditarClienteAdm').innerHTML = mensagemErro("Preencha todos os campos obrigatórios: Nome, CPF, Telefone, Nascimento e Endereço.");
       return;
     }
 
@@ -1204,9 +1387,89 @@
   // =========================
   // ADM - RECEITAS
   // =========================
-  // Mostra o gerenciamento de receitas do adm.
-  async function telaReceitasAdm() {
+  function configurarListaReceitasAdm(filtro = 'todas') {
+    const opcoes = {
+      todas: {
+        titulo: 'Todas as Receitas',
+        vazio: 'Nenhuma receita cadastrada.'
+      },
+      vencendo: {
+        titulo: 'Receitas Próximas do Vencimento',
+        vazio: 'Nenhuma receita próxima do vencimento.'
+      },
+      vencidas: {
+        titulo: 'Receitas Vencidas',
+        vazio: 'Nenhuma receita vencida.'
+      }
+    };
+
+    return opcoes[filtro] || opcoes.todas;
+  }
+
+  function filtrarReceitasAdm(filtro = 'todas') {
+    if (filtro === 'vencendo') {
+      return receitas.filter(r => diasRestantes(r.validade) <= 5 && diasRestantes(r.validade) >= 0);
+    }
+
+    if (filtro === 'vencidas') {
+      return receitas.filter(r => diasRestantes(r.validade) < 0);
+    }
+
+    return receitas;
+  }
+
+  function montarItensReceitasAdm(receitasVisiveis, exibirAcoes = true) {
+    return receitasVisiveis.map(r => {
+      const cliente = clientes.find(c => c.id === r.clienteId);
+      const arquivoReceita = arquivoSeguro(r.arquivoReceita, 'receitas');
+      const acoes = exibirAcoes ? `
+          <button class="warning" onclick="editarReceitaAdm(${r.id})">Editar</button>
+          <button class="danger" onclick="excluirReceitaAdm(${r.id})">Excluir</button>
+      ` : '';
+
+      return `
+        <div class="item-box">
+          <h3>${escapeHtml(r.medicamento)} ${statusReceita(r.validade)}</h3>
+          <p><strong>Cliente:</strong> ${cliente ? escapeHtml(cliente.nome) : 'Não encontrado'}</p>
+          <p><strong>Data da Receita:</strong> ${formatarData(r.dataReceita)}</p>
+          <p><strong>Validade:</strong> ${formatarData(r.validade)}</p>
+          <p><strong>Próxima Retirada:</strong> ${formatarData(r.proximaRetirada)}</p>
+          <p><strong>Observações:</strong> ${escapeHtml(r.observacoes || 'Nenhuma')}</p>
+          <p><strong>Arquivo da Receita:</strong> ${arquivoReceita ? `<a href="${arquivoReceita.dados}" download="${arquivoReceita.nome}">${arquivoReceita.nome}</a>` : 'Nenhum arquivo'}</p>
+
+          ${acoes}
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function telaConsultaReceitasAdm(filtro = 'todas') {
     await sincronizarDadosBackend();
+    const listaConfig = configurarListaReceitasAdm(filtro);
+    const receitasVisiveis = filtrarReceitasAdm(filtro);
+
+    document.getElementById('conteudo').innerHTML = `
+      <div class="card">
+        <h2>${listaConfig.titulo}</h2>
+        <button class="secondary" onclick="dashboard()">Voltar ao Dashboard</button>
+        <div id="listaConsultaReceitasAdm" class="consulta-lista"></div>
+      </div>
+    `;
+
+    const lista = document.getElementById('listaConsultaReceitasAdm');
+
+    if (receitasVisiveis.length === 0) {
+      lista.innerHTML = mensagemAlerta(listaConfig.vazio);
+      return;
+    }
+
+    lista.innerHTML = montarItensReceitasAdm(receitasVisiveis, false);
+  }
+
+  // Mostra o gerenciamento de receitas do adm.
+  async function telaReceitasAdm(filtro = 'todas') {
+    await sincronizarDadosBackend();
+    const listaConfig = configurarListaReceitasAdm(filtro);
 
     document.getElementById('conteudo').innerHTML = `
       <div class="card">
@@ -1253,13 +1516,13 @@
       </div>
 
       <div class="card">
-        <h2>📋 Lista de Receitas</h2>
-        <div id="listaReceitasAdm"></div>
+        <h2>${listaConfig.titulo}</h2>
+        <div id="listaReceitasAdm" data-filtro-receitas="${escapeHtml(filtro)}"></div>
       </div>
     `;
 
     atualizarSelectClientesAdm();
-    atualizarListaReceitasAdm();
+    atualizarListaReceitasAdm(filtro);
   }
 
   // Preenche o select de clientes nas receitas.
@@ -1286,7 +1549,13 @@
     const proximaRetirada = document.getElementById('retiradaReceitaAdm').value.trim();
     const observacoes = document.getElementById('obsReceitaAdm').value.trim();
 
-    if (!clienteId || !medicamento || !dataReceita || !validade || !proximaRetirada) {
+    if (!validarCamposObrigatorios([
+      { id: 'clienteSelectAdm' },
+      { id: 'medicamentoAdm' },
+      { id: 'dataReceitaAdm' },
+      { id: 'validadeReceitaAdm' },
+      { id: 'retiradaReceitaAdm' }
+    ])) {
       document.getElementById('msgReceitaAdm').innerHTML = mensagemErro("Preencha todos os campos obrigatórios da receita: Cliente, Medicamento, Data da Receita, Validade e Próxima Retirada.");
       return;
     }
@@ -1316,33 +1585,20 @@
   }
 
   // Atualiza a lista de receitas do adm.
-  function atualizarListaReceitasAdm() {
+  function atualizarListaReceitasAdm(filtro = '') {
     const lista = document.getElementById('listaReceitasAdm');
     if (!lista) return;
+    const filtroAtual = filtro || lista.dataset.filtroReceitas || 'todas';
+    const listaConfig = configurarListaReceitasAdm(filtroAtual);
+    const receitasVisiveis = filtrarReceitasAdm(filtroAtual);
+    lista.dataset.filtroReceitas = filtroAtual;
 
-    if (receitas.length === 0) {
-      lista.innerHTML = mensagemAlerta("Nenhuma receita cadastrada.");
+    if (receitasVisiveis.length === 0) {
+      lista.innerHTML = mensagemAlerta(listaConfig.vazio);
       return;
     }
 
-    lista.innerHTML = receitas.map(r => {
-      const cliente = clientes.find(c => c.id === r.clienteId);
-      const arquivoReceita = arquivoSeguro(r.arquivoReceita, 'receitas');
-      return `
-        <div class="item-box">
-          <h3>${escapeHtml(r.medicamento)} ${statusReceita(r.validade)}</h3>
-          <p><strong>Cliente:</strong> ${cliente ? escapeHtml(cliente.nome) : 'Não encontrado'}</p>
-          <p><strong>Data da Receita:</strong> ${formatarData(r.dataReceita)}</p>
-          <p><strong>Validade:</strong> ${formatarData(r.validade)}</p>
-          <p><strong>Próxima Retirada:</strong> ${formatarData(r.proximaRetirada)}</p>
-          <p><strong>Observações:</strong> ${escapeHtml(r.observacoes || 'Nenhuma')}</p>
-          <p><strong>Arquivo da Receita:</strong> ${arquivoReceita ? `<a href="${arquivoReceita.dados}" download="${arquivoReceita.nome}">${arquivoReceita.nome}</a>` : 'Nenhum arquivo'}</p>
-
-          <button class="warning" onclick="editarReceitaAdm(${r.id})">Editar</button>
-          <button class="danger" onclick="excluirReceitaAdm(${r.id})">Excluir</button>
-        </div>
-      `;
-    }).join('');
+    lista.innerHTML = montarItensReceitasAdm(receitasVisiveis, true);
   }
 
   // Abre a edicao de receita para o adm.
@@ -1411,7 +1667,13 @@
     const proximaRetirada = document.getElementById('editRetiradaReceitaAdm').value.trim();
     const observacoes = document.getElementById('editObsReceitaAdm').value.trim();
 
-    if (!clienteId || !medicamento || !dataReceita || !validade || !proximaRetirada) {
+    if (!validarCamposObrigatorios([
+      { id: 'editClienteReceitaAdm' },
+      { id: 'editMedicamentoReceitaAdm' },
+      { id: 'editDataReceitaAdm' },
+      { id: 'editValidadeReceitaAdm' },
+      { id: 'editRetiradaReceitaAdm' }
+    ])) {
       document.getElementById('msgEditarReceitaAdm').innerHTML = mensagemErro("Preencha todos os campos obrigatórios da receita.");
       return;
     }
@@ -1444,6 +1706,7 @@
   // Exclui uma receita cadastrada.
   async function excluirReceitaAdm(id) {
     if (!confirm("Deseja realmente excluir esta receita?")) return;
+    const filtroAtual = document.getElementById('listaReceitasAdm')?.dataset.filtroReceitas || 'todas';
 
     try {
       await apiJson(`/receitas/${id}`, {
@@ -1451,7 +1714,7 @@
       });
 
       await sincronizarDadosBackend();
-      telaReceitasAdm();
+      telaReceitasAdm(filtroAtual);
     } catch (error) {
       alert(error.message);
     }
@@ -1693,7 +1956,10 @@
     const mensagem = document.getElementById('smsMensagem').value.trim();
     const msgBox = document.getElementById('msgSmsAdm');
 
-    if (!clienteId || !mensagem) {
+    if (!validarCamposObrigatorios([
+      { id: 'smsClienteSelect' },
+      { id: 'smsMensagem' }
+    ])) {
       msgBox.innerHTML = mensagemErro('Selecione um cliente e escreva a mensagem.');
       return;
     }
